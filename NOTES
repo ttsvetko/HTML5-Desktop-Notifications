@@ -1,0 +1,184 @@
+NOTES:
+========================================================================================================================
+
+Safari:
+- As of OS X 10.8 Mountain Lion, web pages in Safari can post notifications to the system wide notification system known as Notification Center.
+Notifications are dispatched by the WebKit Notification object and follow the implementation outlined by the W3C specification.
+
+Safari Notification documentation:
+https://developer.apple.com/library/mac/#documentation/AppleApplications/Conceptual/SafariJSProgTopics/Articles/SendingNotifications.html#//apple_ref/doc/uid/TP40001483-CH23-SW1
+
+W3C Notification documentation:
+http://dev.w3.org/2006/webapi/WebNotifications/publish/Notifications.html
+
+- Script could not be run in strict mode - some of the Safari native code is written using with expression,
+that is not allowed in strict mode.
+
+- Calling 'requestPermission' in Safari requires a callback function parameter, otherwise it throws an exception
+'TypeError: Not enough arguments'.
+
+========================================================================================================================
+
+Chrome:
+- Chrome does not display notification if both title and body are not set.
+
+========================================================================================================================
+
+<html data-ng-app>
+<head>
+    <title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
+    <script>
+        /*
+         Do not strict mode - Safari 6 throws an error that "with" statement
+         is not allowed in strict mode
+         */
+        //"use strict"
+        (function(win) {
+            var notify = ((win.Notification && win.Notification.permissionLevel) ?
+                            win.Notification : win.webkitNotifications),
+
+            //Chrome style permission levels
+                    PERMISSION_ALLOWED = 0,
+                    PERMISSION_NOT_ALLOWED = 1,
+                    PERMISSION_DISALLOWED = 2,
+
+            //Safari style permission levels
+                    PERMISSION_DEFAULT = "default",
+                    PERMISSION_GRANTED = "granted",
+                    PERMISSION_DENIED = "denied",
+
+                    NOTIFICATION_PROPERTIES = "ondisplay|onerror|onclick".split("|"),
+
+                    createNotification = function(details) {
+                        var notification;
+
+                        if (hasPermission()) {
+                            notification = notify.createNotification(details.image || "", details.title || "", details.body || ""),
+                                    i = 0, length = NOTIFICATION_PROPERTIES.length;
+
+                            for (i; i < length; i++) {
+                                if (notification.hasOwnProperty(NOTIFICATION_PROPERTIES[i])) {
+                                    notification[NOTIFICATION_PROPERTIES[i]] = details[NOTIFICATION_PROPERTIES[i]];
+                                }
+                            }
+                        }
+
+                        return notification;
+                    },
+
+                    getPermission = function() {
+                        var permissionLevel = ((notify.permissionLevel && notify.permissionLevel()) ||
+                                        (notify.checkPermission && notify.checkPermission())),
+                                permission;
+
+                        switch (permissionLevel) {
+                            case PERMISSION_DEFAULT:
+                            case PERMISSION_NOT_ALLOWED:
+                                permission = PERMISSION_NOT_ALLOWED;
+                                break;
+
+                            case PERMISSION_GRANTED:
+                            case PERMISSION_ALLOWED:
+                                permission = PERMISSION_ALLOWED;
+                                break;
+
+                            case PERMISSION_DENIED:
+                            case PERMISSION_DISALLOWED:
+                                permission = PERMISSION_DISALLOWED;
+                                break;
+                        }
+
+                        return permission;
+                    },
+
+                    hasPermission = function() {
+                        var hasPermission;
+
+                        if (notify.permissionLevel) {
+                            hasPermission = (notify.permissionLevel() === PERMISSION_GRANTED);
+                        } else if (notify.checkPermission) {
+                            hasPermission = !notify.checkPermission();
+                        }
+
+                        return hasPermission;
+                    },
+
+                    requestPermission = function(callback) {
+                        /*
+                         Safari 6 requires a callback function otherwise it
+                         throws an error. For chrome, the callback function is an optional.
+                         */
+                        notify.requestPermission(callback)
+                    };
+
+            win.notify = {
+                /**
+                 *
+                 * @param notification
+                 */
+                showNotification: function(/* object */ details, /* boolean */show) {
+                    var notification = createNotification(details);
+                    if (notification) {
+                        if (show) {
+                            notification.show();
+                        }
+                    }
+                    return notification;
+                },
+
+                createHTMLNotification: function() {
+
+                },
+
+                /**
+                 *
+                 * @return {*}
+                 */
+                getPermission: function() {
+                    return getPermission();
+                },
+
+                /**
+                 *
+                 * @return {*}
+                 */
+                hasPermission: function() {
+                    return hasPermission();
+                },
+
+                /**
+                 *
+                 */
+                requestPermission: function(callback) {
+                    requestPermission(callback);
+                }
+            }
+        }(window));
+    </script>
+    <script>
+        function NotificationCenter($scope) {
+            $scope.permissionLevel = notify.getPermission();
+
+            $scope.callback = function() {
+                console.log("test");
+            }
+
+            $scope.requestPermissions = function() {
+                if (!notify.hasPermission()) {
+                    notify.requestPermission(function() {
+                        $scope.$apply($scope.permissionLevel = notify.getPermission());
+                    });
+                }
+            }
+        }
+    </script>
+</head>
+<body data-ng-controller="NotificationCenter">
+    <a data-ng-click="requestPermissions()" data-ng-pluralize data-count="permissionLevel" when="{
+                                                                '0': 'Notifications allowed.',
+                                                                '1': 'Notifications not allowed.',
+                                                                '2': 'Notifications denied.'}">
+    </a>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<html data-ng-app>
+<head>
+    <title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
+    <script>
+        function NotificationCenter() {
+
+        }
+    </script>
+</head>
+<body data-ng-controller="NotificationCenter">
+    <a data-ng-click="requestPermissions()" data-ng-pluralize data-count="permissionLevel" when="{
+                                                                '0': 'Notifications allowed.',
+                                                                '1': 'Notifications not allowed.',
+                                                                '2': 'Notifications denied.'}">
+    </a>
+</body>
+</html>
