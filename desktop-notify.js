@@ -27,11 +27,14 @@
 
         isSupported = !!(win.Notification || win.webkitNotifications || (win.external && win.external.msIsSiteMode() !== undefined)),
 
-        isFunction = function(value) {return typeof value == 'function'},
+        ieVerification = Math.floor((Math.random()*10)+1),
+    isFunction = function(value) {return typeof value == 'function'},
         noop = function() {};
 
     function _createNotification(title, options) {
-        if (win.Notification) {
+        var notification;
+
+        if (win.Notification) { /* Safari 6, Chrome (23+) */
             return new win.Notification(title, {
                 /* The notification's icon - For Chrome in Windows, Linux & Chrome OS */
                 icon: options.icon,
@@ -50,8 +53,9 @@
         } else if (win.external && win.external.msIsSiteMode()) { /* IE9+ */
             //Clear any previous notifications
             window.external.msSiteModeClearIconOverlay();
-
-            win.external.msSiteModeSetIconOverlay(options.icon, title)
+            win.external.msSiteModeSetIconOverlay(options.icon, title);
+            window.external.msSiteModeActivate();
+            return {ieVerification: (++ieVerification)}
         }
     }
 
@@ -62,7 +66,9 @@
                     //http://code.google.com/p/ff-html5notifications/issues/detail?id=58
                     notification.close()
                 } else if (win.external && win.external.msIsSiteMode()) {
-                    window.external.msSiteModeClearIconOverlay();
+                    if (notification.ieVerification === ieVerification) {
+                        window.external.msSiteModeClearIconOverlay()
+                    }
                 }
             }
         }
