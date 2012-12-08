@@ -1,6 +1,11 @@
 NOTES:
 ========================================================================================================================
 
+W3C Specification:
+http://dvcs.w3.org/hg/notifications/raw-file/tip/Overview.html
+
+========================================================================================================================
+
 Safari:
 - As of OS X 10.8 Mountain Lion, web pages in Safari can post notifications to the system wide notification system known as Notification Center.
 Notifications are dispatched by the WebKit Notification object and follow the implementation outlined by the W3C specification.
@@ -178,7 +183,8 @@ Chrome:
     <a data-ng-click="requestPermissions()" data-ng-pluralize data-count="permissionLevel" when="{
                                                                 '0': 'Notifications allowed.',
                                                                 '1': 'Notifications not allowed.',
-                                                                '2': 'Notifications denied.'}">
+                                                                '2': 'Notifications denied.',
+                                                                'other': 'Permission level could not be detected'}">
     </a>
 </body>
 </html>
