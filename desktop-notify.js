@@ -43,7 +43,11 @@
                 */
                 tag: options.tag || ""
             })
-        } else if (win.external && win.external.msIsSiteMode()) {
+        } else if (win.webkitNotifications) { /* FF with html5Notifications plugin installed */
+            notification = win.webkitNotifications.createNotification(options.icon, title, options.body);
+            notification.show();
+            return notification;
+        } else if (win.external && win.external.msIsSiteMode()) { /* IE9+ */
             //Clear any previous notifications
             window.external.msSiteModeClearIconOverlay();
 
@@ -55,6 +59,7 @@
         return {
             close: function() {
                 if (notification && notification.close) {
+                    //http://code.google.com/p/ff-html5notifications/issues/detail?id=58
                     notification.close()
                 } else if (win.external && win.external.msIsSiteMode()) {
                     window.external.msSiteModeClearIconOverlay();
