@@ -25,7 +25,7 @@
         PERMISSION_DENIED = "denied",
         PERMISSION = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED],
 
-        isSupported = !!(win.Notification || win.webkitNotifications || (win.external && win.external.msIsSiteMode() !== undefined)),
+        isSupported = !!(win.Notification /* Safari */ || win.webkitNotifications /* old WebKit */ || navigator.mozNotification /* Firefox Mobile */ || (win.external && win.external.msIsSiteMode() !== undefined) /* IE9+ */),
 
         ieVerification = Math.floor((Math.random() * 10) + 1),
         isFunction = function (value) { return typeof value === 'function'; },
@@ -48,6 +48,9 @@
             });
         } else if (win.webkitNotifications) { /* FF with html5Notifications plugin installed */
             notification = win.webkitNotifications.createNotification(options.icon, title, options.body);
+            notification.show();
+        } else if (navigator.mozNotification) {
+            notification = navigator.mozNotification.createNotification(title, options.body, options.icon);
             notification.show();
         } else if (win.external && win.external.msIsSiteMode()) { /* IE9+ */
             //Clear any previous notifications
@@ -90,19 +93,25 @@
     }
 
     function permissionLevel() {
-        var permission;
+        try {
+            var permission;
 
-        if (!isSupported) { return; }
+            if (!isSupported) { return; }
+            if (win.Notification && win.Notification.permissionLevel) {
+                permission = win.Notification.permissionLevel();
+            } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
+                permission = PERMISSION[win.webkitNotifications.checkPermission()];
+            } else if (navigator.mozNotification) {
+                permission = PERMISSION_GRANTED;
+            } else if (win.external && win.external.msIsSiteMode()) { /* keep last */
+                permission = PERMISSION_GRANTED;
+            }
 
-        if (win.Notification && win.Notification.permissionLevel) {
-            permission = win.Notification.permissionLevel();
-        } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
-            permission = PERMISSION[win.webkitNotifications.checkPermission()];
-        } else if (win.external.msIsSiteMode()) {
-            permission = PERMISSION_GRANTED;
+            return permission;
+        } catch (e) {
+
         }
 
-        return permission;
     }
 
     function createNotification(title, options) {
