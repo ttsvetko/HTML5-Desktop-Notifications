@@ -15,11 +15,11 @@
  *
  * Author: Tsvetan Tsvetkov (tsekach@gmail.com)
  */
-/*
-    Safari native methods required for Notification object do not run in strict mode.
- */
-//"use strict";
-(function(win) {
+(function (win) {
+    /*
+     Safari native methods required for Notification object do not run in strict mode.
+     */
+    //"use strict";
     var PERMISSION_DEFAULT = "default",
         PERMISSION_GRANTED = "granted",
         PERMISSION_DENIED = "denied",
@@ -27,15 +27,15 @@
 
         isSupported = !!(win.Notification || win.webkitNotifications || (win.external && win.external.msIsSiteMode() !== undefined)),
 
-        ieVerification = Math.floor((Math.random()*10)+1),
-    isFunction = function(value) {return typeof value == 'function'},
-        noop = function() {};
+        ieVerification = Math.floor((Math.random() * 10) + 1),
+        isFunction = function (value) { return typeof value === 'function'; },
+        noop = function () {};
 
-    function _createNotification(title, options) {
+    function getNotification(title, options) {
         var notification;
 
         if (win.Notification) { /* Safari 6, Chrome (23+) */
-            return new win.Notification(title, {
+            notification =  new win.Notification(title, {
                 /* The notification's icon - For Chrome in Windows, Linux & Chrome OS */
                 icon: options.icon,
                 /* The notification’s subtitle. */
@@ -45,36 +45,68 @@
                     This prevents duplicate entries from appearing if the user has multiple instances of your website open at once.
                 */
                 tag: options.tag || ""
-            })
+            });
         } else if (win.webkitNotifications) { /* FF with html5Notifications plugin installed */
             notification = win.webkitNotifications.createNotification(options.icon, title, options.body);
             notification.show();
-            return notification;
         } else if (win.external && win.external.msIsSiteMode()) { /* IE9+ */
             //Clear any previous notifications
             window.external.msSiteModeClearIconOverlay();
             win.external.msSiteModeSetIconOverlay(options.icon, title);
             window.external.msSiteModeActivate();
-            return {ieVerification: (++ieVerification)}
+            notification = {
+                "ieVerification": ++ieVerification
+            };
         }
+
+        return notification;
     }
 
-    function _createWrapper(notification) {
+    function getWrapper(notification) {
         return {
-            close: function() {
+            close: function () {
                 if (notification && notification.close) {
                     //http://code.google.com/p/ff-html5notifications/issues/detail?id=58
-                    notification.close()
+                    notification.close();
                 } else if (win.external && win.external.msIsSiteMode()) {
                     if (notification.ieVerification === ieVerification) {
-                        window.external.msSiteModeClearIconOverlay()
+                        window.external.msSiteModeClearIconOverlay();
                     }
                 }
             }
+        };
+    }
+
+    function requestPermission(callback) {
+        if (!isSupported) { return; }
+
+        var callbackFunction = isFunction(callback) ? callback : noop;
+
+        if (win.Notification && win.Notification.requestPermission && win.Notification.permissionLevel) {
+            win.Notification.requestPermission(callbackFunction);
+        } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
+            win.webkitNotifications.requestPermission(callbackFunction);
         }
     }
 
-    function createNotification(/* String */ title, /* */ options) {
+    function permissionLevel() {
+        var permission;
+
+        if (!isSupported) { return; }
+
+        if (win.Notification && win.Notification.permissionLevel) {
+            permission = win.Notification.permissionLevel();
+        } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
+            permission = PERMISSION[win.webkitNotifications.checkPermission()];
+        } else if (win.external.msIsSiteMode()) {
+            permission = PERMISSION_GRANTED;
+        }
+
+        return permission;
+    }
+
+    function createNotification(title, options) {
+        var notificationWrapper;
         /*
             Return undefined if notifications are not supported.
 
@@ -82,37 +114,13 @@
 
             Title and icons are required. Return undefined if not set.
          */
-        if (!isSupported || !title || !options.icon || permissionLevel() !== PERMISSION_GRANTED) {return}
-
-        var notification = _createNotification(title, options),
-            wrapper = _createWrapper(notification);
-
-        return wrapper
-    }
-
-    function permissionLevel() {
-        if (!isSupported) {return}
-
-        if (win.Notification && win.Notification.permissionLevel) {
-            return win.Notification.permissionLevel();
-        } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
-            return PERMISSION[win.webkitNotifications.checkPermission()];
-        } else if (win.external.msIsSiteMode()) {
-            return PERMISSION_GRANTED
+        if (isSupported && title && options.icon && (permissionLevel() === PERMISSION_GRANTED)) {
+            notificationWrapper = getWrapper(getNotification(title, options));
         }
+
+        return notificationWrapper;
     }
 
-    function requestPermission(callback) {
-        if (!isSupported) {return}
-
-        var callbackFunction = isFunction(callback) ? callback : noop;
-
-        if (win.Notification && win.Notification.requestPermission && win.Notification.permissionLevel) {
-            win.Notification.requestPermission(callbackFunction)
-        } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
-            win.webkitNotifications.requestPermission(callbackFunction)
-        }
-    }
 
     win.notify = {
         PERMISSION_DEFAULT: PERMISSION_DEFAULT,
