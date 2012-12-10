@@ -25,7 +25,15 @@
         PERMISSION_DENIED = "denied",
         PERMISSION = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED],
 
-        isSupported = !!(win.Notification /* Safari */ || win.webkitNotifications /* old WebKit */ || navigator.mozNotification /* Firefox Mobile */ || (win.external && win.external.msIsSiteMode() !== undefined) /* IE9+ */),
+        isSupported = (function () {
+            try {
+                return !!(win.Notification /* Safari */ || win.webkitNotifications /* old WebKit */ ||
+                            navigator.mozNotification /* Firefox Mobile */ ||
+                            (win.external && win.external.msIsSiteMode() !== undefined) /* IE9+ */);
+            } catch (e) {
+
+            }
+        }()),
 
         ieVerification = Math.floor((Math.random() * 10) + 1),
         isFunction = function (value) { return typeof value === 'function'; },
@@ -54,9 +62,9 @@
             notification.show();
         } else if (win.external && win.external.msIsSiteMode()) { /* IE9+ */
             //Clear any previous notifications
-            window.external.msSiteModeClearIconOverlay();
+            win.external.msSiteModeClearIconOverlay();
             win.external.msSiteModeSetIconOverlay(options.icon, title);
-            window.external.msSiteModeActivate();
+            win.external.msSiteModeActivate();
             notification = {
                 "ieVerification": ++ieVerification
             };
@@ -73,7 +81,7 @@
                     notification.close();
                 } else if (win.external && win.external.msIsSiteMode()) {
                     if (notification.ieVerification === ieVerification) {
-                        window.external.msSiteModeClearIconOverlay();
+                        win.external.msSiteModeClearIconOverlay();
                     }
                 }
             }
@@ -93,25 +101,20 @@
     }
 
     function permissionLevel() {
-        try {
-            var permission;
+        var permission;
 
-            if (!isSupported) { return; }
-            if (win.Notification && win.Notification.permissionLevel) {
-                permission = win.Notification.permissionLevel();
-            } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
-                permission = PERMISSION[win.webkitNotifications.checkPermission()];
-            } else if (navigator.mozNotification) {
-                permission = PERMISSION_GRANTED;
-            } else if (win.external && win.external.msIsSiteMode()) { /* keep last */
-                permission = PERMISSION_GRANTED;
-            }
-
-            return permission;
-        } catch (e) {
-
+        if (!isSupported) { return; }
+        if (win.Notification && win.Notification.permissionLevel) {
+            permission = win.Notification.permissionLevel();
+        } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
+            permission = PERMISSION[win.webkitNotifications.checkPermission()];
+        } else if (navigator.mozNotification) {
+            permission = PERMISSION_GRANTED;
+        } else if (win.external && win.external.msIsSiteMode()) { /* keep last */
+            permission = PERMISSION_GRANTED;
         }
 
+        return permission;
     }
 
     function createNotification(title, options) {
