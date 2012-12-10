@@ -27,7 +27,7 @@
 
         isSupported = (function () {
             try {
-                return !!(win.Notification /* Safari */ || win.webkitNotifications /* old WebKit */ ||
+                return !!(win.Notification /* Safari, Chrome */ || win.webkitNotifications /* old WebKit, Firefox with html5notifications plugin installed */ ||
                             navigator.mozNotification /* Firefox Mobile */ ||
                             (win.external && win.external.msIsSiteMode() !== undefined) /* IE9+ */);
             } catch (e) {
