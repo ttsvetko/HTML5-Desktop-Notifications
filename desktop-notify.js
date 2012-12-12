@@ -17,7 +17,7 @@
  */
 (function (win) {
     /*
-     Safari native methods required for Notification object do not run in strict mode.
+     Safari native methods required for Notifications do NOT run in strict mode.
      */
     //"use strict";
     var PERMISSION_DEFAULT = "default",
@@ -26,12 +26,29 @@
         PERMISSION = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED],
 
         isSupported = (function () {
+            /*
+             * Use try {} catch() {} because the check for IE may throws an exception
+             * if the code is run on browser that is not Safar/Chrome/IE or
+             * Firefox with html5notifications plugin.
+             *
+             * Also, we canNOT detect if msIsSiteMode method exists, as it is
+             * a method of host object. In IE check for existing method of host
+             * object returns undefined. So, we try to run it - if it runs 
+             * successfully - then it is IE9+, if not - an exceptions is thrown.
+             */
             try {
-                return !!(win.Notification /* Safari, Chrome */ || win.webkitNotifications /* old WebKit, Firefox with html5notifications plugin installed */ ||
-                            navigator.mozNotification /* Firefox Mobile */ ||
-                            (win.external && win.external.msIsSiteMode() !== undefined) /* IE9+ */);
+                return !!(
+                            /* Safari, Chrome */
+                            win.Notification || 
+                            /* Chrome & ff-html5notifications plugin */
+                            win.webkitNotifications ||
+                            /* Firefox Mobile */
+                            navigator.mozNotification ||
+                            /* IE9+ */
+                            (win.external && win.external.msIsSiteMode() !== undefined)
+                        );
             } catch (e) {
-
+                
             }
         }()),
 
@@ -57,7 +74,7 @@
         } else if (win.webkitNotifications) { /* FF with html5Notifications plugin installed */
             notification = win.webkitNotifications.createNotification(options.icon, title, options.body);
             notification.show();
-        } else if (navigator.mozNotification) {
+        } else if (navigator.mozNotification) { /* Firefox Mobile */
             notification = navigator.mozNotification.createNotification(title, options.body, options.icon);
             notification.show();
         } else if (win.external && win.external.msIsSiteMode()) { /* IE9+ */
@@ -94,8 +111,17 @@
         var callbackFunction = isFunction(callback) ? callback : noop;
 
         if (win.Notification && win.Notification.requestPermission && win.Notification.permissionLevel) {
+            /*
+             * Chrome 23 supports win.Notification.requestPermission, but it
+             * breaks the browsers, so use the old-webkit-prefixed 
+             * win.webkitNotifications.checkPermission instead.
+             */
             win.Notification.requestPermission(callbackFunction);
         } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
+            /*
+             * Firefox with html5notifications plugin supports this method
+             * for requesting permissions.
+             */
             win.webkitNotifications.requestPermission(callbackFunction);
         }
     }
@@ -104,13 +130,18 @@
         var permission;
 
         if (!isSupported) { return; }
+        
         if (win.Notification && win.Notification.permissionLevel) {
+            //Safari 6
             permission = win.Notification.permissionLevel();
         } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
+            //Chrome & Firefox with html5-notifications plugin installed
             permission = PERMISSION[win.webkitNotifications.checkPermission()];
         } else if (navigator.mozNotification) {
+            //Firefox Mobile
             permission = PERMISSION_GRANTED;
         } else if (win.external && win.external.msIsSiteMode()) { /* keep last */
+            //IE9+
             permission = PERMISSION_GRANTED;
         }
 
