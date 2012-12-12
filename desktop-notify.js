@@ -149,7 +149,8 @@
     }
 
     function createNotification(title, options) {
-        var notificationWrapper;
+        var notification,
+            notificationWrapper;
         /*
             Return undefined if notifications are not supported.
 
@@ -158,7 +159,20 @@
             Title and icons are required. Return undefined if not set.
          */
         if (isSupported && title && options.icon && (permissionLevel() === PERMISSION_GRANTED)) {
-            notificationWrapper = getWrapper(getNotification(title, options));
+            notification = getNotification(title, options);
+            notificationWrapper = getWrapper(notification);
+            
+            
+            //Auto-close notification
+            if (options.timeout && notification.addEventListener) {
+                notification.addEventListener("show", function() {
+                    var notification = notificationWrapper;
+                    
+                    win.setTimeout(function() {
+                        notification.close();
+                    }, options.timeout);
+                })
+            }
         }
 
         return notificationWrapper;
