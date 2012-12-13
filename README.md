@@ -121,7 +121,7 @@ Safari 6 running on MacOS:<br/>
 Firefox with html5notifications plugin installed and running on Windows7:<br/>
 <img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/FirefoxWindows7.png"/>
 
-Firefox Mobile running on Android:
+Firefox Mobile running on Android:<br/>
 <img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/FirefoxAndroid.png"/>
 
 <a href="#html5-desktop-notifications">top</a>
