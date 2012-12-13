@@ -10,6 +10,7 @@ A small library that unifies the HTML5 Notifications APIs along different browse
 	<li>Browsers Support</li>
 	<li>Usage</li>
 	<li>API Documentation</li>
+    <li>Screenshots</li>
 	<li>Limitations</li>
 </ol>
 
@@ -77,3 +78,16 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 <sup>2</sup> Support for Safari 6
 
 <sup>3</sup> Support for Firefox only when <a href="http://code.google.com/p/ff-html5notifications/">html5-notifications plugin</a> is installed. Recommended version is 1.2.0.1 - see the following issue: http://code.google.com/p/ff-html5notifications/issues/detail?id=58 . For MacOS <a href="http://www.growl.info/">Growl</a> app is required.
+
+## Usage
+
+## API Documentation
+
+## Screenshots
+Chrome running on Windows7:
+<img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/ChromeWindows7.png"/>
+
+Chrome running on MacOS:
+<img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/ChromeMacOS.png"/>
+
+## Limitations
