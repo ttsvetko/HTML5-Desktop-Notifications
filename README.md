@@ -75,18 +75,8 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 			<td>✓</td>
 			<td>✓</td>
 			<td>✓</td>
-            <td>-</td>
-		</tr><!-- Firefox-->
-        
-        <!-- Firefox Mobile -->
-        <tr>
-            <td>Firefox Mobile</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
             <td>✓</td>
-        </tr>
+		</tr><!-- Firefox-->
 	</tbody>
 </table>
 
@@ -94,7 +84,7 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 
 <sup>2</sup> Support for Safari 6
 
-<sup>3</sup> Support for Firefox only when <a href="http://code.google.com/p/ff-html5notifications/">html5-notifications plugin</a> is installed. Recommended version is 1.2.0.1 - see the following issue: http://code.google.com/p/ff-html5notifications/issues/detail?id=58 . For MacOS <a href="http://www.growl.info/">Growl</a> app is required.
+<sup>3</sup> Support for Firefox only when <a href="http://code.google.com/p/ff-html5notifications/">html5-notifications plugin</a> is installed. Recommended version is 1.2.0.1 - see the following issue: http://code.google.com/p/ff-html5notifications/issues/detail?id=58 . For MacOS <a href="http://www.growl.info/">Growl</a> app is required. Firefox Mobile for Android does NOT require any plugins installed.
 
 <a href="#html5-desktop-notifications">top</a>
 ## Usage
