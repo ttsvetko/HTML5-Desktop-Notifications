@@ -1,32 +1,32 @@
 ###### (draft)
+
 # HTML5 Desktop Notifications
 
-Displaying desktop notifications using the html5 desktop notifications api for 
-Safari/ Chrome/ Firefox and pinned sites api for IE.
-
-The <a href="http://dvcs.w3.org/hg/notifications/raw-file/tip/Overview.html#notificationoptions">HTML5 Notifications API</a> allows you to display notifications to the user for given events. 
-There is <a href="http://dvcs.w3.org/hg/notifications/raw-file/tip/Overview.html#notificationoptions">draft spec</a> but it is not currently in any standard.
+A small library that unifies the HTML5 Notifications APIs along different browsers including IE9 & IE10.
 
 ## Content
 <ol>
-	<li>Content</li>
+	<li>Introduction</li>
 	<li>Browsers Support</li>
-	<li>Notes</li>
+	<li>Usage</li>
 	<li>API Documentation</li>
 	<li>Limitations</li>
 </ol>
 
+## Introduction
+
+<a href="http://dvcs.w3.org/hg/notifications/raw-file/tip/Overview.html">HTML5 Notifications API</a> allows you to display notifications to the user for given events. There is a <a href="http://dvcs.w3.org/hg/notifications/raw-file/tip/Overview.html">draft spec</a>, but it is not currently in any standard.
+
+Google Chrome introduces notifications in version 5 (http://caniuse.com/#feat=notifications) - supporting the old proposed APIs version. Starting from version 22, Chrome supports the lastest proposed draft version of the Notifications API, but some of the methods are not implemented or breaking the page - see below for detailes.
+
+Safari 6 implements most of the APIs in proposed Notifications draft. See <a href="https://developer.apple.com/library/mac/#documentation/AppleApplications/Conceptual/SafariJSProgTopics/Articles/SendingNotifications.html#//apple_ref/doc/uid/TP40001483-CH23-SW1">Safari documentation</a>.
+
+IE9 introduced pinned sites, a convenient way for users to access your website directly by clicking an icon on the taskbar. Pinned sites are easy to implement, too, requiring very little code. For more information about creating pinned sites, see <a href="http://msdn.microsoft.com/en-us/library/ie/gg491731(v=vs.85).aspx">Pinned Sites Developer Documentation</a>. Pinned site can display icon overlays on the taskbar or highlights the taskbar button to notify user of activity. To view an icon overlay, the taskbar buttons must be in their default large icon mode. Small taskbar icons do not support icon overlays. In addition, icon overlays are visible only while the Pinned site window is running. The icon is removed from the taskbar button when the Pinned site window is closed. See <a href="http://msdn.microsoft.com/en-us/library/ie/gg491744(v=vs.85).aspx">Working with custom icon overlays in pinned sites</a>.
+
 ## Browsers Support
 
-<table style="width: 100%;">
-	<colgroup>
-		<col style="border-color: #eee; border-style: none solid; border-width: 1px; text-align:center"></col>
-		<col style="border-right: 1px solid #eee"></col>
-		<col style="border-right: 1px solid #eee"></col>
-		<col style="border-right: 1px solid #eee"></col>
-		<col style="border-right: 1px solid #eee"></col>
-	</colgroup>
-	<thead style="border-color: #eee; border-style: solid none; border-width: 1px;">
+<table>
+	<thead>
 		<th></th>
 		<th>Windows</th>
 		<th>MacOS</th>
@@ -35,49 +35,45 @@ There is <a href="http://dvcs.w3.org/hg/notifications/raw-file/tip/Overview.html
 	</thead>
 	<tbody>
 		<!-- IE -->
-		<tr style="border-bottom: 1px solid #eee;">
-			<td style="text-align: center">IE<sup>*</sup></td>
-			<td style="text-align: center">✓</td>
-			<td style="text-align: center">-</td>
-			<td style="text-align: center">-</td>
-			<td style="text-align: center">-</td>
+		<tr>
+			<td>IE<sup>1</sup></td>
+			<td>✓</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
 		</tr><!-- IE -->
 
 		<!-- Chrome -->
-		<tr style="border-bottom: 1px solid #eee;">
-			<td style="text-align: center">Chrome<sup>*</sup></td>
-			<td style="text-align: center">✓</td>
-			<td style="text-align: center">✓</td>
-			<td style="text-align: center">✓</td>
-			<td style="text-align: center">✓</td>
+		<tr>
+			<td>Chrome</td>
+			<td>✓</td>
+			<td>✓</td>
+			<td>✓</td>
+			<td>✓</td>
 		</tr><!-- Chrome -->
 
 		<!-- Safari -->
-		<tr style="border-bottom: 1px solid #eee;">
-			<td style="text-align: center">Safari<sup>**</sup></td>
-			<td style="text-align: center">-</td>
-			<td style="text-align: center">✓</td>
-			<td style="text-align: center">-</td>
-			<td style="text-align: center">-</td>
+		<tr>
+			<td>Safari<sup>2</sup></td>
+			<td>-</td>
+			<td>✓</td>
+			<td>-</td>
+			<td>-</td>
 		</tr><!-- Safari -->
 
 		<!-- Firefox -->
-		<tr style="border-bottom: 1px solid #eee;">
-			<td style="text-align: center">Firefox<sup>***</sup></td>
-			<td style="text-align: center">✓</td>
-			<td style="text-align: center">✓</td>
-			<td style="text-align: center">✓</td>
-			<td style="text-align: center">✓</td>
+		<tr>
+			<td>Firefox<sup>3</sup></td>
+			<td>✓</td>
+			<td>✓</td>
+			<td>✓</td>
+			<td>✓</td>
 		</tr><!-- Firefox-->
 	</tbody>
 </table>
-<hr style="border-color: #eee; border-style: solid none none; border-width: 1px; height: 1px;"/>
-<p>
-	<sup>*</sup> Support for IE 9+
-</p>
-<p>
-	<sup>**</sup> Support for Safari 6
-</p>
-<p>
-	<sup>***</sup> Support for Firefox with <a href="http://code.google.com/p/ff-html5notifications/">html5notifications</a> plugin installed.
-</p>
+
+<sup>1</sup> Supported for IE9+ running on Windows7 or later. In addition, notifications are visible only while the Pinned site window is running. The icon is removed from the taskbar button when the Pinned site window is closed.
+
+<sup>2</sup> Supported for Safari 6
+
+<sup>3</sup> Support for Firefox only when <a href="http://code.google.com/p/ff-html5notifications/"html5-notifications plugin</a> is installed. Suggested version is 1.2.0.1 - see the following issue: http://code.google.com/p/ff-html5notifications/issues/detail?id=58 . For MacOS <a href="http://www.growl.info/">Growl</a> app is required.
