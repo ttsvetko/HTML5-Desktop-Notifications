@@ -6,12 +6,12 @@ A small library that unifies the HTML5 Notifications APIs along different browse
 
 ## Content
 <ol>
-	<li>Introduction</li>
-	<li>Browsers Support</li>
-	<li>Usage</li>
-	<li>API Documentation</li>
-    <li>Screenshots</li>
-	<li>Limitations</li>
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#browsers-support">Browsers Support</a></li>
+	<li><a href="#usage">Usage</a></li>
+	<li><a href="#api-documentation">API Documentation</a></li>
+    <li><a href="#screenshots">Screenshots</a></li>
+	<li><a href="#limitations">Limitations</a></li>
 </ol>
 
 ## Introduction
@@ -23,6 +23,8 @@ Google Chrome introduces notifications in version 5 (http://caniuse.com/#feat=no
 Safari 6 implements most of the APIs in proposed Notifications draft. See <a href="https://developer.apple.com/library/mac/#documentation/AppleApplications/Conceptual/SafariJSProgTopics/Articles/SendingNotifications.html#//apple_ref/doc/uid/TP40001483-CH23-SW1">Safari documentation</a>.
 
 IE9 introduced pinned sites, a convenient way for users to access your website directly by clicking an icon on the taskbar. Pinned sites are easy to implement, too, requiring very little code. For more information about creating pinned sites, see <a href="http://msdn.microsoft.com/en-us/library/ie/gg491731(v=vs.85).aspx">Pinned Sites Developer Documentation</a>. Pinned site can display icon overlays on the taskbar or highlights the taskbar button to notify user of activity. To view an icon overlay, the taskbar buttons must be in their default large icon mode. Small taskbar icons do not support icon overlays. In addition, icon overlays are visible only while the Pinned site window is running. The icon is removed from the taskbar button when the Pinned site window is closed. See <a href="http://msdn.microsoft.com/en-us/library/ie/gg491744(v=vs.85).aspx">Working with custom icon overlays in pinned sites</a>.
+
+<a href="#html5-desktop-notifications">top</a>
 
 ## Browsers Support
 
@@ -79,9 +81,14 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 
 <sup>3</sup> Support for Firefox only when <a href="http://code.google.com/p/ff-html5notifications/">html5-notifications plugin</a> is installed. Recommended version is 1.2.0.1 - see the following issue: http://code.google.com/p/ff-html5notifications/issues/detail?id=58 . For MacOS <a href="http://www.growl.info/">Growl</a> app is required.
 
+<a href="#html5-desktop-notifications">top</a>
 ## Usage
 
+<a href="#html5-desktop-notifications">top</a>
+
 ## API Documentation
+
+<a href="#html5-desktop-notifications">top</a>
 
 ## Screenshots
 IE9 running on Windows7:<br/>
@@ -99,4 +106,7 @@ Safari 6 running on MacOS:<br/>
 Firefox with html5notifications plugin installed and running on Windows7:<br/>
 <img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/FirefoxWindows7.png"/>
 
+<a href="#html5-desktop-notifications">top</a>
 ## Limitations
+
+<a href="#html5-desktop-notifications">top</a>
