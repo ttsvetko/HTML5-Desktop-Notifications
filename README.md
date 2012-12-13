@@ -116,5 +116,10 @@ Firefox Mobile running on Android:<br/>
 
 <a href="#html5-desktop-notifications">top</a>
 ## Limitations
+<ul>
+    <li>Notifications could not be "styled" - Only icon(for some browsers and OS), title and body could be changed.</li>
+    <li>IE9+ supports *.ico file types only for an overlay icon. No notification title or notification description. Just an icon.</li>
+    <li>For Chrome & Safari running on MacOS the icon of the notification could not be changed - it is always Chrome or Safari icon.</li>
+</ul>
 
 <a href="#html5-desktop-notifications">top</a>
