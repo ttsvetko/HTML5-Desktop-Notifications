@@ -84,10 +84,19 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 ## API Documentation
 
 ## Screenshots
+IE9 running on Windows7:<br/>
+<img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/IE9Windows7.png"/>
+
 Chrome running on Windows7:<br/>
 <img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/ChromeWindows7.png"/>
 
 Chrome running on MacOS:<br/>
 <img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/ChromeMacOS.png"/>
+
+Safari 6 running on MacOS:<br/>
+<img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/SafariMacOs.png"/>
+
+Firefox with html5notifications plugin installed and running on Windows7:<br/>
+<img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/FirefoxWindows7.png"/>
 
 ## Limitations
