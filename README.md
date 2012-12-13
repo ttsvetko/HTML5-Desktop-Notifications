@@ -141,8 +141,6 @@ The <b>notify</b> global object provides a single global namespace within which 
             <li>close() -- call to close the notification.</li>
         </ul>
     </li>
-
-Figure 2  Dialog box prompting for permission</li>
 </ul>
 
 <a href="#html5-desktop-notifications">top</a>
