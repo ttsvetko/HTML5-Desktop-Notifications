@@ -17,7 +17,7 @@ A small library that unifies the HTML5 Notifications APIs along different browse
 
 <a href="http://dvcs.w3.org/hg/notifications/raw-file/tip/Overview.html">HTML5 Notifications API</a> allows you to display notifications to the user for given events. There is a <a href="http://dvcs.w3.org/hg/notifications/raw-file/tip/Overview.html">draft spec</a>, but it is not currently in any standard.
 
-Google Chrome introduces notifications in version 5 (http://caniuse.com/#feat=notifications) - supporting the old proposed APIs version. Starting from version 22, Chrome supports the lastest proposed draft version of the Notifications API, but some of the methods are not implemented or breaking the page - see below for detailes.
+Google Chrome introduces notifications in version 5 (http://caniuse.com/#feat=notifications) - supporting the old proposed APIs version. Starting from version 22, Chrome supports the lastest proposed draft version of the Notifications API, but some of the methods are not implemented or breaking the page - see below for details.
 
 Safari 6 implements most of the APIs in proposed Notifications draft. See <a href="https://developer.apple.com/library/mac/#documentation/AppleApplications/Conceptual/SafariJSProgTopics/Articles/SendingNotifications.html#//apple_ref/doc/uid/TP40001483-CH23-SW1">Safari documentation</a>.
 
@@ -72,8 +72,8 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 	</tbody>
 </table>
 
-<sup>1</sup> Supported for IE9+ running on Windows7 or later. In addition, notifications are visible only while the Pinned site window is running. The icon is removed from the taskbar button when the Pinned site window is closed.
+<sup>1</sup> Support for IE9+ running on Windows7 or later. In addition, notifications are visible only while the Pinned site window is running. The icon is removed from the taskbar button when the Pinned site window is closed. The taskbar buttons must be in their default large icon mode, small taskbar icons do not support icon overlays.
 
-<sup>2</sup> Supported for Safari 6
+<sup>2</sup> Support for Safari 6
 
-<sup>3</sup> Support for Firefox only when <a href="http://code.google.com/p/ff-html5notifications/"html5-notifications plugin</a> is installed. Suggested version is 1.2.0.1 - see the following issue: http://code.google.com/p/ff-html5notifications/issues/detail?id=58 . For MacOS <a href="http://www.growl.info/">Growl</a> app is required.
+<sup>3</sup> Support for Firefox only when <a href="http://code.google.com/p/ff-html5notifications/">html5-notifications plugin</a> is installed. Recommended version is 1.2.0.1 - see the following issue: http://code.google.com/p/ff-html5notifications/issues/detail?id=58 . For MacOS <a href="http://www.growl.info/">Growl</a> app is required.
