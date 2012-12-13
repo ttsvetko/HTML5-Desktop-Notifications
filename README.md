@@ -84,10 +84,10 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 ## API Documentation
 
 ## Screenshots
-Chrome running on Windows7:
+Chrome running on Windows7:<br/>
 <img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/ChromeWindows7.png"/>
 
-Chrome running on MacOS:
+Chrome running on MacOS:<br/>
 <img src="https://raw.github.com/ttsvetko/HTML5-Desktop-Notifications/master/screenshots/ChromeMacOS.png"/>
 
 ## Limitations
