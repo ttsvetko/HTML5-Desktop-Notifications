@@ -92,12 +92,12 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 First, ensure that notifications are allowed to be displayed by calling <em>notify.permissionLevel()</em>. 
 
 ### Step 2
-If returned value is equal to <em>notify.PERMISSION_DEFAULT</em>, then call <em>notify.requestPermission()</em> to ask user to grand permissions for displaying notifications. 
-If returned value is equal to <em>notify.PERMISSION_GRANTED</em>, permissions are granted and can display notifications.
-If returned value is equal to <em>notify.PERMISSION_DENIED</em> - displaying notifications is not allowed. Calling <em>notify.requestPermission()</em> will not ask user for permission. Instead, user should allow notifications or remove current domain from the list of notifications setting in browser's setting page.
+If returned value is equal to <em>notify.PERMISSION_DEFAULT</em>, then call <em>notify.requestPermission()</em> to ask user to grand permissions for displaying notifications. <br/>
+If returned value is equal to <em>notify.PERMISSION_GRANTED</em>, permissions are granted and can display notifications.<br/>
+If returned value is equal to <em>notify.PERMISSION_DENIED</em> - notifications are denied. Instead, user should allow notifications or remove current domain from the list of notifications setting into browser's setting page.
 
 ### Step 3
-Create notifications by calling <em>notify.createNotification()</em>. Notification title, notification body and notification icon are required parameters. Calling em>notify.createNotification()</em> returns a notification object that has one method for now - close() - used to close manually the notificaiton.
+Create notifications by calling <em>notify.createNotification()</em>. Notification title, notification body and notification icon are required parameters. Calling <em>notify.createNotification()</em> returns am notification object that has one method - close() - used to close manually the notificaiton.
 
 
 <a href="#html5-desktop-notifications">top</a>
