@@ -89,7 +89,7 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 <a href="#html5-desktop-notifications">top</a>
 ## Usage
 ### Step 1
-First, ensure that notifications are allowed to be displayed by calling <em>notify.permissionLevel</em>. 
+First, ensure that notifications are allowed to be displayed by calling <em>notify.permissionLevel()</em>. 
 
 ### Step 2
 If returned value is equal to <em>notify.PERMISSION_DEFAULT</em>, then call <em>notify.requestPermission()</em> to ask user to grand permissions for displaying notifications. 
