@@ -88,10 +88,62 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 
 <a href="#html5-desktop-notifications">top</a>
 ## Usage
+### Step 1
+First, ensure that notifications are allowed to be displayed by calling <em>notify.permissionLevel</em>. 
+
+### Step 2
+If returned value is equal to <em>notify.PERMISSION_DEFAULT</em>, then call <em>notify.requestPermission()</em> to ask user to grand permissions for displaying notifications. 
+If returned value is equal to <em>notify.PERMISSION_GRANTED</em>, permissions are granted and can display notifications.
+If returned value is equal to <em>notify.PERMISSION_DENIED</em> - displaying notifications is not allowed. Calling <em>notify.requestPermission()</em> will not ask user for permission. Instead, user should allow notifications or remove current domain from the list of notifications setting in browser's setting page.
+
+### Step 3
+Create notifications by calling <em>notify.createNotification()</em>. Notification title, notification body and notification icon are required parameters. Calling em>notify.createNotification()</em> returns a notification object that has one method for now - close() - used to close manually the notificaiton.
+
 
 <a href="#html5-desktop-notifications">top</a>
 
 ## API Documentation
+The <b>notify</b> global object provides a single global namespace within which all code resides. It contains the following properties and methods:
+
+<ul>
+    <li>PERMISSION_DEFAULT: "default" -- "default" string value</li>
+    <li>PERMISSION_GRANTED: "granted" -- "granted" string value</li>
+    <li>PERMISSION_DENIED: "denied" -- "denied" string value</li>
+    <li>isSupported: true/false -- indicates browser's notifications support.</li>
+    <li>permissionLevel() -- check for permissions to display notifications. Returns one of the following:
+        <ul>
+            <li>PERMISSION_DEFAULT -- The user has not yet specified whether they approve of notifications being sent from this domain. (Chrome, Safari & Firefox)</li>
+            <li>PERMISSION_GRANTED
+                <ul>
+                    <li>Chrome, Safari & Firefox: The user has given permission for notifications to be sent from this domain</li>
+                    <li>IE9+: Page is running on pinned site window.</li>
+                    <li>Firefox Mobile: HTML5 notifications are supported</li>
+                </ul>
+            </li>
+            <li>PERMISSION_DENIED -- The user has denied permission for notifications to be sent from this domain. (Chrome, Safari & Firefox)</li>
+        </ul>
+    </li>
+    <li>requestPermission() -- If the permission level is default, it is likely that the user hasn’t yet been prompted to grant access to notifications from your domain. Prompt users to grand permissions by calling the requestPermission() method. This method accepts one parameter, a callback function, which executes when the user grants or denies permission. (Applies for Chrome, Safari and Firefox only. To grand permissions for IE, the site window should be pinned. As window cannot be pinned with javascript, this method gracefully do nothing for IE.)
+    <li>createNotification() -- Create a notification by calling createNotification() method: notify.createNotification(String title [, Object options]).
+        <ul>
+            <li>Title parameter is required.</li>
+            <li>Available keys that can be included in the options object are the following:
+                <ul>
+                    <li>body (required): The notification’s subtitle. For IE it provides an accessible description of the information conveyed by the icon overlay. Choose text that can be read by screen readers.</li>
+                    <li>icon (required): The icon that will be set as a custom overlay for IE and notification displayed from Chrome running on Windows. Note that icon by default is not required for Chrome, Safari & Firefox, but is required for IE. In order to unify the implementations, the icon should be always provided in order to display notifications for all supported browsers.</li>
+                    <li>tag -- The notification’s unique identifier. This prevents duplicate entries from appearing in Notification Center if the user has multiple instances of your website open at once. (Apply for Chrome & Safari only)</li>
+                    <li>timeout -- interval for auto-closing notification. (Does not work for Chrome on MacOS)</li>
+                </ul>
+            </li>
+        </ul>
+        Returns an object with the following methods:
+        <ul>
+            <li>close() -- call to close the notification.</li>
+        </ul>
+    </li>
+
+Figure 2  Dialog box prompting for permission</li>
+</ul>
 
 <a href="#html5-desktop-notifications">top</a>
 
