@@ -46,7 +46,6 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 			<td>-</td>
 			<td>-</td>
             <td>-</td>
-            <td>-</td>
 		</tr><!-- IE -->
 
 		<!-- Chrome -->
@@ -56,7 +55,6 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 			<td>✓</td>
 			<td>✓</td>
 			<td>✓</td>
-            <td>-</td>
             <td>-</td>
 		</tr><!-- Chrome -->
 
@@ -68,7 +66,6 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 			<td>-</td>
 			<td>-</td>
             <td>-</td>
-            <td>-</td>
 		</tr><!-- Safari -->
 
 		<!-- Firefox -->
@@ -78,7 +75,6 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 			<td>✓</td>
 			<td>✓</td>
 			<td>✓</td>
-            <td>-</td>
             <td>-</td>
 		</tr><!-- Firefox-->
         
