@@ -2,7 +2,7 @@
 
 # HTML5 Desktop Notifications
 
-A small library that unifies the HTML5 Notifications APIs along different browsers including IE9 & IE10.
+A small library that unifies the HTML5 Notifications APIs accross different browsers including IE9 & IE10.
 
 ## Content
 <ol>
