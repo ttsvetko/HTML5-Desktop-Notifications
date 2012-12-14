@@ -53,7 +53,9 @@
         }()),
 
         ieVerification = Math.floor((Math.random() * 10) + 1),
-        isFunction = function (value) { return typeof value === 'function'; },
+        isFunction = function (value) { return (value).constructor === Function; },
+        isString = function (value) {return (value).constructor === String; },
+        isObject = function (value) {return (value).constructor === Object; }, 
         noop = function () {};
 
     function getNotification(title, options) {
@@ -110,19 +112,18 @@
 
         var callbackFunction = isFunction(callback) ? callback : noop;
 
-        if (win.Notification && win.Notification.requestPermission && win.Notification.permissionLevel) {
+        if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
             /*
              * Chrome 23 supports win.Notification.requestPermission, but it
              * breaks the browsers, so use the old-webkit-prefixed 
              * win.webkitNotifications.checkPermission instead.
-             */
-            win.Notification.requestPermission(callbackFunction);
-        } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
-            /*
+             *
              * Firefox with html5notifications plugin supports this method
              * for requesting permissions.
              */
-            win.webkitNotifications.requestPermission(callbackFunction);
+             win.webkitNotifications.requestPermission(callbackFunction);
+        } else if (win.Notification && win.Notification.requestPermission) {
+            win.Notification.requestPermission(callbackFunction);
         }
     }
 
