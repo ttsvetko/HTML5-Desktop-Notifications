@@ -53,9 +53,9 @@
         }()),
 
         ieVerification = Math.floor((Math.random() * 10) + 1),
-        isFunction = function (value) { return (value).constructor === Function; },
-        isString = function (value) {return (value).constructor === String; },
-        isObject = function (value) {return (value).constructor === Object; }, 
+        isFunction = function (value) { return (value && (value).constructor === Function); },
+        isString = function (value) {return (value && (value).constructor === String); },
+        isObject = function (value) {return (value && (value).constructor === Object); }, 
         noop = function () {};
 
     function getNotification(title, options) {
@@ -161,7 +161,7 @@
          */
         if (isSupported && 
                 title && isString(title) && 
-                options.icon && (isString(options.icon) || isObject(options.icon)) && 
+                (isString(options.icon) || isObject(options.icon)) && 
                 (permissionLevel() === PERMISSION_GRANTED)) {
             notification = getNotification(title, options);
             notificationWrapper = getWrapper(notification);
