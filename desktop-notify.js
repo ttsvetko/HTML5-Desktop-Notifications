@@ -64,7 +64,7 @@
         if (win.Notification) { /* Safari 6, Chrome (23+) */
             notification =  new win.Notification(title, {
                 /* The notification's icon - For Chrome in Windows, Linux & Chrome OS */
-                icon: options.icon,
+                icon: isString(options.icon) ? options.icon : options.icon["x32"],
                 /* The notification’s subtitle. */
                 body: options.body || "",
                 /*
@@ -82,7 +82,7 @@
         } else if (win.external && win.external.msIsSiteMode()) { /* IE9+ */
             //Clear any previous notifications
             win.external.msSiteModeClearIconOverlay();
-            win.external.msSiteModeSetIconOverlay(options.icon, title);
+            win.external.msSiteModeSetIconOverlay((isString(options.icon) ? options.icon : options.icon["x16"]), title);
             win.external.msSiteModeActivate();
             notification = {
                 "ieVerification": ++ieVerification
@@ -159,7 +159,10 @@
 
             Title and icons are required. Return undefined if not set.
          */
-        if (isSupported && title && options.icon && (permissionLevel() === PERMISSION_GRANTED)) {
+        if (isSupported && 
+                title && isString(title) && 
+                options.icon && (isString(options.icon) || isObject(options.icon)) && 
+                (permissionLevel() === PERMISSION_GRANTED)) {
             notification = getNotification(title, options);
             notificationWrapper = getWrapper(notification);
             
