@@ -161,7 +161,7 @@
          */
         if (isSupported && 
                 title && isString(title) && 
-                (isString(options.icon) || isObject(options.icon)) && 
+                (options && options.icon && (isString(options.icon) || isObject(options.icon))) && 
                 (permissionLevel() === PERMISSION_GRANTED)) {
             notification = getNotification(title, options);
             notificationWrapper = getWrapper(notification);
