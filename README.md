@@ -10,7 +10,7 @@ A small library that unifies the HTML5 Notifications APIs accross different brow
 	<li><a href="#browsers-support">Browsers Support</a></li>
 	<li><a href="#usage">Usage</a></li>
 	<li><a href="#api-documentation">API Documentation</a></li>
-    <li><a href="#screenshots">Screenshots</a></li>
+    	<li><a href="#screenshots">Screenshots</a></li>
 	<li><a href="#limitations">Limitations</a></li>
 </ol>
 
@@ -35,7 +35,7 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 		<th>MacOS</th>
 		<th>Linux</th>
 		<th>ChromeOS</th>
-        <th>Android</th>
+        	<th>Android</th>
 	</thead>
 	<tbody>
 		<!-- IE -->
@@ -45,7 +45,7 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 			<td>-</td>
 			<td>-</td>
 			<td>-</td>
-            <td>-</td>
+            		<td>-</td>
 		</tr><!-- IE -->
 
 		<!-- Chrome -->
@@ -55,7 +55,7 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 			<td>✓</td>
 			<td>✓</td>
 			<td>✓</td>
-            <td>-</td>
+            		<td>-</td>
 		</tr><!-- Chrome -->
 
 		<!-- Safari -->
@@ -65,7 +65,7 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 			<td>✓</td>
 			<td>-</td>
 			<td>-</td>
-            <td>-</td>
+            		<td>-</td>
 		</tr><!-- Safari -->
 
 		<!-- Firefox -->
@@ -74,8 +74,8 @@ IE9 introduced pinned sites, a convenient way for users to access your website d
 			<td>✓</td>
 			<td>✓</td>
 			<td>✓</td>
-			<td>✓</td>
-            <td>✓</td>
+			<td>-</td>
+    			<td>✓</td>
 		</tr><!-- Firefox-->
 	</tbody>
 </table>
