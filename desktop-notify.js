@@ -24,7 +24,11 @@
         PERMISSION_GRANTED = "granted",
         PERMISSION_DENIED = "denied",
         PERMISSION = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED],
-
+        defaultSetting = {
+            pageVisibility: true
+        },
+        empty = {},
+        emptyString = "",
         isSupported = (function () {
             /*
              * Use try {} catch() {} because the check for IE may throws an exception
@@ -37,41 +41,41 @@
              * successfully - then it is IE9+, if not - an exceptions is thrown.
              */
             try {
-                return !!(
-                            /* Safari, Chrome */
-                            win.Notification || 
-                            /* Chrome & ff-html5notifications plugin */
-                            win.webkitNotifications ||
-                            /* Firefox Mobile */
-                            navigator.mozNotification ||
-                            /* IE9+ */
-                            (win.external && win.external.msIsSiteMode() !== undefined)
-                        );
-            } catch (e) {
-                
-            }
+                return !!(/* Safari, Chrome */win.Notification || /* Chrome & ff-html5notifications plugin */win.webkitNotifications || /* Firefox Mobile */navigator.mozNotification || /* IE9+ */(win.external && win.external.msIsSiteMode() !== undefined));
+            } catch (e) {}
         }()),
-
         ieVerification = Math.floor((Math.random() * 10) + 1),
         isFunction = function (value) { return (value && (value).constructor === Function); },
         isString = function (value) {return (value && (value).constructor === String); },
-        isObject = function (value) {return (value && (value).constructor === Object); }, 
-        noop = function () {};
-
+        isObject = function (value) {return (value && (value).constructor === Object); },
+        /**
+         * Dojo Mixin
+         */
+        mixin = function (target, source) {
+            var name, s;
+            for (name in source) {
+                s = source[name];
+                if (!(name in target) || (target[name] !== s && (!(name in empty) || empty[name] !== s))) {
+                    target[name] = s;
+                }
+            }
+            return target; // Object
+        },
+        noop = function () {},
+        settings = defaultSetting;
     function getNotification(title, options) {
         var notification;
-
         if (win.Notification) { /* Safari 6, Chrome (23+) */
             notification =  new win.Notification(title, {
                 /* The notification's icon - For Chrome in Windows, Linux & Chrome OS */
-                icon: isString(options.icon) ? options.icon : options.icon["x32"],
+                icon: isString(options.icon) ? options.icon : options.icon.x32,
                 /* The notification’s subtitle. */
-                body: options.body || "",
+                body: options.body || emptyString,
                 /*
                     The notification’s unique identifier.
                     This prevents duplicate entries from appearing if the user has multiple instances of your website open at once.
                 */
-                tag: options.tag || ""
+                tag: options.tag || emptyString
             });
         } else if (win.webkitNotifications) { /* FF with html5Notifications plugin installed */
             notification = win.webkitNotifications.createNotification(options.icon, title, options.body);
@@ -82,16 +86,14 @@
         } else if (win.external && win.external.msIsSiteMode()) { /* IE9+ */
             //Clear any previous notifications
             win.external.msSiteModeClearIconOverlay();
-            win.external.msSiteModeSetIconOverlay((isString(options.icon) ? options.icon : options.icon["x16"]), title);
+            win.external.msSiteModeSetIconOverlay((isString(options.icon) ? options.icon : options.icon.x16), title);
             win.external.msSiteModeActivate();
             notification = {
-                "ieVerification": ++ieVerification
+                "ieVerification": ieVerification + 1
             };
         }
-
         return notification;
     }
-
     function getWrapper(notification) {
         return {
             close: function () {
@@ -106,12 +108,9 @@
             }
         };
     }
-
     function requestPermission(callback) {
         if (!isSupported) { return; }
-
         var callbackFunction = isFunction(callback) ? callback : noop;
-
         if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
             /*
              * Chrome 23 supports win.Notification.requestPermission, but it
@@ -121,17 +120,14 @@
              * Firefox with html5notifications plugin supports this method
              * for requesting permissions.
              */
-             win.webkitNotifications.requestPermission(callbackFunction);
+            win.webkitNotifications.requestPermission(callbackFunction);
         } else if (win.Notification && win.Notification.requestPermission) {
             win.Notification.requestPermission(callbackFunction);
         }
     }
-
     function permissionLevel() {
         var permission;
-
         if (!isSupported) { return; }
-        
         if (win.Notification && win.Notification.permissionLevel) {
             //Safari 6
             permission = win.Notification.permissionLevel();
@@ -145,10 +141,17 @@
             //IE9+
             permission = PERMISSION_GRANTED;
         }
-
         return permission;
     }
-
+    /**
+     *  
+     */
+    function config(params) {
+        if (params && isObject(params)) {
+            mixin(settings, params);
+        }
+        return settings;
+    }
     function createNotification(title, options) {
         var notification,
             notificationWrapper;
@@ -159,38 +162,32 @@
 
             Title and icons are required. Return undefined if not set.
          */
-        if (isSupported && 
-                title && isString(title) && 
-                (options && options.icon && (isString(options.icon) || isObject(options.icon))) && 
-                (permissionLevel() === PERMISSION_GRANTED)) {
+        if (isSupported && isString(title) && (options && (isString(options.icon) || isObject(options.icon))) && (permissionLevel() === PERMISSION_GRANTED)) {
             notification = getNotification(title, options);
             notificationWrapper = getWrapper(notification);
-            
-            
             //Auto-close notification
             if (options.timeout && notification.addEventListener) {
-                notification.addEventListener("show", function() {
+                notification.addEventListener("show", function () {
                     var notification = notificationWrapper;
-                    
-                    win.setTimeout(function() {
+                    win.setTimeout(function () {
                         notification.close();
                     }, options.timeout);
-                })
+                });
             }
         }
-
         return notificationWrapper;
     }
-
-
     win.notify = {
         PERMISSION_DEFAULT: PERMISSION_DEFAULT,
         PERMISSION_GRANTED: PERMISSION_GRANTED,
         PERMISSION_DENIED: PERMISSION_DENIED,
-
-        createNotification: createNotification,
         isSupported: isSupported,
+        config: config,
+        createNotification: createNotification,
         permissionLevel: permissionLevel,
         requestPermission: requestPermission
     };
+    if (isFunction(Object.freeze)) {
+        Object.freeze(win.notify);
+    }
 }(window));
