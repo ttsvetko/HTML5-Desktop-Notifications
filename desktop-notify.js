@@ -25,11 +25,13 @@
         PERMISSION_DENIED = "denied",
         PERMISSION = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED],
         defaultSetting = {
-            pageVisibility: true
+            pageVisibility: true,
+            autoClose: 5000
         },
         empty = {},
         emptyString = "",
         isSupported = (function () {
+            var isSupported = false;
             /*
              * Use try {} catch() {} because the check for IE may throws an exception
              * if the code is run on browser that is not Safar/Chrome/IE or
@@ -41,8 +43,9 @@
              * successfully - then it is IE9+, if not - an exceptions is thrown.
              */
             try {
-                return !!(/* Safari, Chrome */win.Notification || /* Chrome & ff-html5notifications plugin */win.webkitNotifications || /* Firefox Mobile */navigator.mozNotification || /* IE9+ */(win.external && win.external.msIsSiteMode() !== undefined));
+                isSupported = !!(/* Safari, Chrome */win.Notification || /* Chrome & ff-html5notifications plugin */win.webkitNotifications || /* Firefox Mobile */navigator.mozNotification || /* IE9+ */(win.external && win.external.msIsSiteMode() !== undefined));
             } catch (e) {}
+            return isSupported;
         }()),
         ieVerification = Math.floor((Math.random() * 10) + 1),
         isFunction = function (value) { return (value && (value).constructor === Function); },
@@ -97,12 +100,14 @@
     function getWrapper(notification) {
         return {
             close: function () {
-                if (notification && notification.close) {
-                    //http://code.google.com/p/ff-html5notifications/issues/detail?id=58
-                    notification.close();
-                } else if (win.external && win.external.msIsSiteMode()) {
-                    if (notification.ieVerification === ieVerification) {
-                        win.external.msSiteModeClearIconOverlay();
+                if (notification) {
+                    if (notification.close) {
+                        //http://code.google.com/p/ff-html5notifications/issues/detail?id=58
+                        notification.close();
+                    } else if (win.external && win.external.msIsSiteMode()) {
+                        if (notification.ieVerification === ieVerification) {
+                            win.external.msSiteModeClearIconOverlay();
+                        }
                     }
                 }
             }
@@ -152,6 +157,9 @@
         }
         return settings;
     }
+    function isDocumentHidden() {
+        return settings.pageVisibility ? (document.hidden || document.msHidden || document.mozHidden || document.webkitHidden) : true;
+    }
     function createNotification(title, options) {
         var notification,
             notificationWrapper;
@@ -162,18 +170,18 @@
 
             Title and icons are required. Return undefined if not set.
          */
-        if (isSupported && isString(title) && (options && (isString(options.icon) || isObject(options.icon))) && (permissionLevel() === PERMISSION_GRANTED)) {
+        if (isSupported && isDocumentHidden() && isString(title) && (options && (isString(options.icon) || isObject(options.icon))) && (permissionLevel() === PERMISSION_GRANTED)) {
             notification = getNotification(title, options);
-            notificationWrapper = getWrapper(notification);
-            //Auto-close notification
-            if (options.timeout && notification.addEventListener) {
-                notification.addEventListener("show", function () {
-                    var notification = notificationWrapper;
-                    win.setTimeout(function () {
-                        notification.close();
-                    }, options.timeout);
-                });
-            }
+        }
+        notificationWrapper = getWrapper(notification);
+        //Auto-close notification
+        if (settings.autoClose && notification && !notification.ieVerification && notification.addEventListener) {
+            notification.addEventListener("show", function () {
+                var notification = notificationWrapper;
+                win.setTimeout(function () {
+                    notification.close();
+                }, settings.autoClose);
+            });
         }
         return notificationWrapper;
     }
