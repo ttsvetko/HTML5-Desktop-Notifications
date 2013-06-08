@@ -147,7 +147,7 @@
             permission = win.Notification.permission;
         } else if (win.external && win.external.msIsSiteMode()) { /* keep last */
             //IE9+
-            permission = PERMISSION_GRANTED;
+            permission = win.external.msIsSiteMode() ? PERMISSION_GRANTED : PERMISSION_DEFAULT;
         }
         return permission;
     }
