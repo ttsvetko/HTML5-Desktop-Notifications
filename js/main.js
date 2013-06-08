@@ -27,11 +27,18 @@ function NotifyDemo ($scope) {
         statusClass = {},
         isIE = false,
         isSupported = notify.isSupported,
-        permissionLevel = notify.permissionLevel(),
         messages = {
             notPinned: 'Pin current page in the taskbar in order to receive notifications',
             notSupported: '<strong>Desktop Notifications not supported!</strong> Check supported browsers table and project\'s GitHub page.'
         };
+    
+    $scope.notification = {
+        title: "Notification Title",
+        body: "Notification Body",
+        icon: "/images/chat.ico"
+    };
+    $scope.permissionLevel = notify.permissionLevel();
+    $scope.permissionsGranted = ($scope.permissionLevel === notify.PERMISSION_GRANTED);
 
     try {
         isIE = (win.external && win.external.msIsSiteMode() !== undefined);
@@ -45,16 +52,24 @@ function NotifyDemo ($scope) {
     messages[notify.PERMISSION_GRANTED] = '<strong>Success!</strong>';
     messages[notify.PERMISSION_DENIED] = '<strong>Denied!</strong>';
 
-    $scope.status = isSupported ? statusClass[permissionLevel] : statusClass[notify.PERMISSION_DENIED];
-    $scope.message = isSupported ? (isIE ? messages.notPinned : messages[permissionLevel]) : messages.notSupported;
+    $scope.status = isSupported ? statusClass[$scope.permissionLevel] : statusClass[notify.PERMISSION_DENIED];
+    $scope.message = isSupported ? (isIE ? messages.notPinned : messages[$scope.permissionLevel]) : messages.notSupported;
 
     $scope.requestPermission = function() {
-        if (permissionLevel === notify.PERMISSION_DEFAULT) {
+        if ($scope.permissionLevel === notify.PERMISSION_DEFAULT) {
             notify.requestPermission(function() {
-                permissionLevel = notify.permissionLevel();
-                $scope.status = isSupported ? statusClass[permissionLevel] : statusClass[notify.PERMISSION_DENIED];
-                $scope.message = isSupported ? (isIE ? messages.notPinned : messages[permissionLevel]) : messages.notSupported;
+                $scope.$apply($scope.permissionLevel = notify.permissionLevel());
+                $scope.$apply($scope.permissionsGranted = ($scope.permissionLevel === notify.PERMISSION_GRANTED));
+                $scope.$apply($scope.status = isSupported ? statusClass[$scope.permissionLevel] : statusClass[notify.PERMISSION_DENIED]);
+                $scope.$apply($scope.message = isSupported ? (isIE ? messages.notPinned : messages[$scope.permissionLevel]) : messages.notSupported);
             });
         }
+    }
+    
+    $scope.showNotification = function() {
+        notify.createNotification($scope.notification.title, {
+            body: $scope.notification.body,
+            icon: $scope.notification.icon
+        });
     }
 }

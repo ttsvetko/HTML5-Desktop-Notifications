@@ -11,6 +11,13 @@ body {
 
 }
 
+input, .btn{
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 17px 10px !important;
+    width: 100%;
+}
+
 .navbar .brand {
     margin: 0;
 }
