@@ -1,0 +1,31 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    box-shadow: 0 0 5px 2px #EEE;
+    margin: 0 auto;
+    padding: 100px 50px 0;
+    position: relative;
+    width: 60%;
+
+}
+
+.navbar .brand {
+    margin: 0;
+}
+
+.navbar-fixed-top {
+    margin: 0;
+    position: absolute;
+    width: 100%;
+}
+
+.alert {
+    cursor: pointer;
+}
+
+.alert.alert-success,
+.alert.alert-error {
+    cursor: default;
+}
