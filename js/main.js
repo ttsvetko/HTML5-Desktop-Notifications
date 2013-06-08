@@ -35,7 +35,7 @@ function NotifyDemo ($scope) {
     $scope.notification = {
         title: "Notification Title",
         body: "Notification Body",
-        icon: "/images/chat.ico"
+        icon: "images/chat.ico"
     };
     $scope.permissionLevel = notify.permissionLevel();
     $scope.permissionsGranted = ($scope.permissionLevel === notify.PERMISSION_GRANTED);
