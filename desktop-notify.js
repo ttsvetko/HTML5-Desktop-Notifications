@@ -145,7 +145,7 @@
         } else if (win.Notification && win.Notification.permission) {
             // Firefox 23+
             permission = win.Notification.permission;
-        } else if (win.external && win.external.msIsSiteMode()) { /* keep last */
+        } else if (win.external && (win.external.msIsSiteMode() !== undefined)) { /* keep last */
             //IE9+
             permission = win.external.msIsSiteMode() ? PERMISSION_GRANTED : PERMISSION_DEFAULT;
         }
