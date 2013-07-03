@@ -198,7 +198,7 @@
         permissionLevel: permissionLevel,
         requestPermission: requestPermission
     };
-    if (isFunction(Object.freeze)) {
-        Object.freeze(win.notify);
+    if (isFunction(Object.seal)) {
+        Object.seal(win.notify);
     }
 }(window));
