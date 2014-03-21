@@ -1,0 +1,23 @@
+{
+    "name": "Notify",
+    "version": "0.2.0",
+    "description": "Javascript library for HTML5 desktop notifications",
+    "keywords": ["notifications", "html5 notifications", "desktop notifications", "javascript"],
+    "homepage": "https://github.com/ttsvetko/HTML5-Desktop-Notifications",
+    "bugs": {
+        "url": "https://github.com/ttsvetko/HTML5-Desktop-Notifications/issues",
+        "emial": "tsekach@gmail.com"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "Tsvetan Tsvetkov"
+    },
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/npm/npm.git"
+    },
+    "private": true,
+    "devDependencies": {
+        "connect": "~2.14.3"
+    } 
+}
