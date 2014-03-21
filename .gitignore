@@ -1,0 +1,5 @@
+# node.js modules
+node_modules
+
+# cloud9 dir
+.c9revisions
