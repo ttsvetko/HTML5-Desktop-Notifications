@@ -39,7 +39,7 @@
              *
              * Also, we canNOT detect if msIsSiteMode method exists, as it is
              * a method of host object. In IE check for existing method of host
-             * object returns undefined. So, we try to run it - if it runs 
+             * object returns undefined. So, we try to run it - if it runs
              * successfully - then it is IE9+, if not - an exceptions is thrown.
              */
             try {
@@ -104,6 +104,9 @@
                     if (notification.close) {
                         //http://code.google.com/p/ff-html5notifications/issues/detail?id=58
                         notification.close();
+                    }
+                    else if (notification.cancel) {
+                        notification.cancel();
                     } else if (win.external && win.external.msIsSiteMode()) {
                         if (notification.ieVerification === ieVerification) {
                             win.external.msSiteModeClearIconOverlay();
@@ -119,7 +122,7 @@
         if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
             /*
              * Chrome 23 supports win.Notification.requestPermission, but it
-             * breaks the browsers, so use the old-webkit-prefixed 
+             * breaks the browsers, so use the old-webkit-prefixed
              * win.webkitNotifications.checkPermission instead.
              *
              * Firefox with html5notifications plugin supports this method
@@ -152,7 +155,7 @@
         return permission;
     }
     /**
-     *  
+     *
      */
     function config(params) {
         if (params && isObject(params)) {
