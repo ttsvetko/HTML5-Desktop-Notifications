@@ -142,12 +142,12 @@
         } else if (win.webkitNotifications && win.webkitNotifications.checkPermission) {
             //Chrome & Firefox with html5-notifications plugin installed
             permission = PERMISSION[win.webkitNotifications.checkPermission()];
-        } else if (navigator.mozNotification) {
-            //Firefox Mobile
-            permission = PERMISSION_GRANTED;
         } else if (win.Notification && win.Notification.permission) {
             // Firefox 23+
             permission = win.Notification.permission;
+        } else if (navigator.mozNotification) {
+            //Firefox Mobile
+            permission = PERMISSION_GRANTED;
         } else if (win.external && (win.external.msIsSiteMode() !== undefined)) { /* keep last */
             //IE9+
             permission = win.external.msIsSiteMode() ? PERMISSION_GRANTED : PERMISSION_DEFAULT;
