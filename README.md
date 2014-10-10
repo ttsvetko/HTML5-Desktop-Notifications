@@ -102,6 +102,12 @@ If returned value is equal to <em>notify.PERMISSION_GRANTED</em>, permissions ar
 If returned value is equal to <em>notify.PERMISSION_DENIED</em> - notifications are denied. Instead, user should allow notifications or remove current domain from the list of notifications setting into browser's setting page.
 
 ### Step 3
+Set global configurations:
+ - pageVisibility - to displaying notification when page is not visible - for browsers that support pageVisibility only. Defaults to false;
+ - autoClose - an interval of time in ms for displaying the notification and then it is closed automatically. Defaults to 0 (notifications will not be closed automatically)
+
+notify.config({pageVisibility: false, autoClose: 500});
+
 Create notifications by calling <em>notify.createNotification()</em>. Notification title, notification body and notification icon are required parameters. Calling <em>notify.createNotification()</em> returns am notification object that has one method - close() - used to close manually the notificaiton.
 
 
