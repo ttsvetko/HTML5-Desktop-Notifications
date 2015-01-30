@@ -163,9 +163,7 @@
         }
         return settings;
     }
-    function isDocumentHidden() {
-        return settings.pageVisibility ? (document.hidden || document.msHidden || document.mozHidden || document.webkitHidden) : true;
-    }
+    
     function createNotification(title, options) {
         var notification,
             notificationWrapper;
@@ -176,7 +174,7 @@
 
             Title and icons are required. Return undefined if not set.
          */
-        if (isSupported && isDocumentHidden() && isString(title) && (options && (isString(options.icon) || isObject(options.icon))) && (permissionLevel() === PERMISSION_GRANTED)) {
+        if (isSupported && isString(title) && (options && (isString(options.icon) || isObject(options.icon))) && (permissionLevel() === PERMISSION_GRANTED)) {
             notification = getNotification(title, options);
         }
         notificationWrapper = getWrapper(notification);
