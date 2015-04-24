@@ -113,6 +113,11 @@
                         }
                     }
                 }
+            },
+            on: function (type, listener) {
+                if (notification && notification.addEventListener) {
+                    return notification.addEventListener(type, listener);
+                }
             }
         };
     }

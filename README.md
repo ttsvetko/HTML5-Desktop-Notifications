@@ -149,6 +149,7 @@ The <b>notify</b> global object provides a single global namespace within which 
         Returns an object with the following methods:
         <ul>
             <li>close() -- call to close the notification.</li>
+            <li>on() -- add an event listener to the notification. Supported listeners are 'click', 'show', 'error', and 'close'.</li>
         </ul>
     </li>
 </ul>
