@@ -1,4 +1,6 @@
-###### (draft)
+###### DEPRECATED
+
+
 
 # HTML5 Desktop Notifications
 
