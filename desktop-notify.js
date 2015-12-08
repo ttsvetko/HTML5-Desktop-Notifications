@@ -78,7 +78,8 @@
                     The notification’s unique identifier.
                     This prevents duplicate entries from appearing if the user has multiple instances of your website open at once.
                 */
-                tag: options.tag || emptyString
+                tag: options.tag || emptyString,
+                dir: options.dir || 'auto'
             });
         } else if (win.webkitNotifications) { /* FF with html5Notifications plugin installed */
             notification = win.webkitNotifications.createNotification(options.icon, title, options.body);
