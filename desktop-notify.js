@@ -95,6 +95,22 @@
                 "ieVerification": ieVerification + 1
             };
         }
+        if (options.onclick) {
+            notification.onclick = options.onclick;
+        }
+        if (options.onclose) {
+            notification.onclose = options.onclose;
+        }
+        if (options.ondisplay) {
+            if (win.Notification) {
+                notification.onshow = options.ondisplay;
+            } else {
+                notification.ondisplay = options.ondisplay;
+            }
+        }
+        if (options.onerror) {
+            notification.onerror = options.onerror;
+        }
         return notification;
     }
     function getWrapper(notification) {
