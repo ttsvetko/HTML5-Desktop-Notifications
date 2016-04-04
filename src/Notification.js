@@ -31,7 +31,6 @@
         this._requestPermission = this.requestPermission || function(callback) {
                 callback(PERMISSION_GRANTED);
             };
-
         this.requestPermission = function() {
             return (this._requestPermission() ||
                 function() {
@@ -78,8 +77,21 @@
      * @constructor
      */
     function WebKitNotification() {
-        this.permission = PERMISSION_GRANTED;
-        this.requestPermission = function() {};
+        Object.defineProperty(this, permission, {
+            enumerable: true,
+            get: function() {
+                return win.webkitNotifications.checkPermission();
+            }
+        });
+        this.requestPermission = function() {
+            return function() {
+                return {
+                    then: function(callback) {
+                        win.webkitNotifications.requestPermission(callback);
+                    }
+                }
+            };
+        };
     }
 
     WebKitNotification.prototype = Notification.prototype;
