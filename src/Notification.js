@@ -62,7 +62,13 @@
      */
     function MozNotification() {
         this.permission = PERMISSION_GRANTED;
-        this.requestPermission = function() {};
+        this.requestPermission = function() {
+            return {
+                then: function(callback) {
+                    callback(PERMISSION_GRANTED);
+                }
+            }
+        };
     }
 
     MozNotification.prototype = Notification.prototype;
