@@ -11,6 +11,10 @@
     // map for the old permission values
     var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED];
 
+    /**
+     * Notification
+     * @constructor
+     */
     function Notification() {}
     Object.defineProperty(Notification, 'permission', {
         enumerable: true,
@@ -25,6 +29,10 @@
         }
     });
 
+    /**
+     * IE Notification
+     * @constructor
+     */
     function IENotification() {}
     Object.defineProperty(IENotification, 'permission', {
         enumerable: true,
@@ -40,6 +48,10 @@
         }
     });
 
+    /**
+     * WebKit Notification
+     * @constructor
+     */
     function WebKitNotification() {}
     Object.defineProperty(WebKitNotification, 'permission', {
         enumerable: true,
@@ -54,6 +66,9 @@
         }
     });
 
+    /*
+        Check Notification support and create Notification
+     */
     try {
         win.Notification = (
             // W3C
@@ -78,11 +93,23 @@
         Object.defineProperty(win.Notification, 'permission', {
             enumerable: true,
             get: function() {
-                return win.Notification.permissionLevel();
+                return this.permissionLevel();
             }
         });
     }
 
+    /*
+        Notification.requestPermission should return a Promise(by spec).
+        Keep the original method and replace it with a custom one that
+        checks if the call of Notification.requestPermission returns a promise
+        and if not, then return a custom object that simulates the Promise object.
+
+        Specification:
+        Notification.requestPermission().then(callback);
+
+        Old Spec:
+        Notification.requestPermission(callback);
+     */
     win.Notification._requestPermission = win.Notification.requestPermission;
     Object.defineProperty(win.Notification, 'requestPermission', {
         enumerable: true,
@@ -97,7 +124,7 @@
                 promise = {
                     then: function(callback) {
                         this._requestPermission(callback);
-                    }
+                    }.bind(this)
                 }
             }
 
