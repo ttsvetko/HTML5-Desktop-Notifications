@@ -1,3 +1,7 @@
+/** @namespace window */
+/** @namespace window.webkitNotifications */
+/** @namespace window.external */
+
 ;(function(win, undefined) {
     /*
      Safari native methods required for Notifications do NOT run in strict mode.
@@ -56,7 +60,7 @@
     Object.defineProperty(WebKitNotification, 'permission', {
         enumerable: true,
         get: function() {
-            return PERMISSION[win.webkitNotifications.checkPermission()];
+            return PERMISSIONS[win.webkitNotifications.checkPermission()];
         }
     });
     Object.defineProperty(WebKitNotification, 'requestPermission', {
@@ -131,4 +135,4 @@
             return promise;
         }
     });
-}(this));
+}(window));
