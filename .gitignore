@@ -1,8 +1,5 @@
-# IntelliJ
-.idea
+## IntelliJ ##
+.idea/
 
-# node.js modules
-node_modules
-
-# cloud9 dir
-.c9revisions
+## node.js modules ##
+node_modules/

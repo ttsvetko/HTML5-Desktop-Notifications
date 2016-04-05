@@ -1,0 +1,44 @@
+{
+    "name"              : "HTML5Notification",
+    "description"       : "Notification polyfill",
+    "version"           : "0.2.0",
+    "homepage"          : "https://github.com/ttsvetko/HTML5-Desktop-Notifications",
+    "bugs"              : {
+        "url"   : "https://github.com/ttsvetko/HTML5-Desktop-Notifications/issues",
+        "email" : "tsekach+html5notification@gmail.com"
+    },
+    "author"            : {
+        "name"  : "Tsvetan Tsvetkov",
+        "email" : "tsekach@gmail.com"
+    },
+    "repository"        : {
+        "type"  : "git",
+        "url"   : "https://github.com/ttsvetko/HTML5-Desktop-Notifications.git"
+    },
+
+    "engines"           : {
+        "node": ">=5"
+    },
+
+    "devDependencies"	: {
+        "grunt"                         : "^0.4.5",
+        "grunt-cli"                     : "^0.1.13",
+
+        "grunt-eslint"                  : "^18.0.0",
+
+        "grunt-contrib-clean"           : "^1.0.0",
+        "grunt-contrib-uglify"          : "^1.0.0",
+        "grunt-contrib-watch"           : "^0.6.1",
+
+        "load-grunt-config"             : "^0.19.1",
+        "time-grunt"                    : "^1.3.0"
+
+    },
+    "dependencies": {
+    },
+    "scripts": {
+        "grunt": "grunt -v",
+        "grunt:dev": "grunt -v dev"
+    },
+    "private"           : true
+}

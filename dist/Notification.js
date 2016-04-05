@@ -1,90 +1,81 @@
-;(function(win, undefined) {
+/*! HTML5Notification - v0.2.0 - 2016-04-05 */
+(function(win, undefined) {
     /*
      Safari native methods required for Notifications do NOT run in strict mode.
      */
     //"use strict";
-
     // local variables
-    var PERMISSION_DEFAULT  = "default"; // The user decision is unknown; in this case the application will act as if permission was denied.
-    var PERMISSION_GRANTED  = "granted"; // The user has explicitly granted permission for the current origin to display system notifications.
-    var PERMISSION_DENIED   = "denied"; // The user has explicitly denied permission for the current origin to display system notifications.
+    var PERMISSION_DEFAULT = "default";
+    // The user decision is unknown; in this case the application will act as if permission was denied.
+    var PERMISSION_GRANTED = "granted";
+    // The user has explicitly granted permission for the current origin to display system notifications.
+    var PERMISSION_DENIED = "denied";
+    // The user has explicitly denied permission for the current origin to display system notifications.
     // map for the old permission values
-    var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED];
-
+    var PERMISSIONS = [ PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED ];
     function Notification() {}
-    Object.defineProperty(Notification, 'permission', {
+    Object.defineProperty(Notification, "permission", {
         enumerable: true,
         get: function() {
             return PERMISSION_GRANTED;
         }
     });
-    Object.defineProperty(Notification, 'requestPermission', {
+    Object.defineProperty(Notification, "requestPermission", {
         enumerable: true,
         value: function(callback) {
             callback(this.permission);
         }
     });
-
     function IENotification() {}
-    Object.defineProperty(IENotification, 'permission', {
+    Object.defineProperty(IENotification, "permission", {
         enumerable: true,
         get: function() {
             var isTabPinned = win.external.msIsSiteMode();
             return isTabPinned ? PERMISSION_GRANTED : PERMISSION_DENIED;
         }
     });
-    Object.defineProperty(IENotification, 'requestPermission', {
+    Object.defineProperty(IENotification, "requestPermission", {
         enumerable: true,
         value: function(callback) {
             callback(this.permission);
         }
     });
-
     function WebKitNotification() {}
-    Object.defineProperty(WebKitNotification, 'permission', {
+    Object.defineProperty(WebKitNotification, "permission", {
         enumerable: true,
         get: function() {
             return PERMISSION[win.webkitNotifications.checkPermission()];
         }
     });
-    Object.defineProperty(WebKitNotification, 'requestPermission', {
+    Object.defineProperty(WebKitNotification, "requestPermission", {
         enumerable: true,
         value: function(callback) {
             win.webkitNotifications.requestPermission(callback);
         }
     });
-
     try {
-        win.Notification = (
-            // W3C
-            win.Notification ||
-            // Opera Mobile/Android Browser
-            (win.webkitNotifications && WebKitNotification) ||
-            // IE9+ pinned site
-            (win.external && win.external.msIsSiteMode() !== undefined && IENotification)
-        );
-    } catch(e) {
-        // IE check may throws an exception in other browsers
-    } finally {
+        win.Notification = // W3C
+        win.Notification || // Opera Mobile/Android Browser
+        win.webkitNotifications && WebKitNotification || // IE9+ pinned site
+        win.external && win.external.msIsSiteMode() !== undefined && IENotification;
+    } catch (e) {} finally {
         // Use empty Notification in case no support detected
         win.Notification = win.Notification || Notification;
     }
-
     /*
         Safari6 do not support Notification.permission.
         Instead, it support Notification.permissionLevel()
      */
     if (!win.Notification.permission) {
-        Object.defineProperty(win.Notification, 'permission', {
+        Object.defineProperty(win.Notification, "permission", {
             enumerable: true,
             get: function() {
                 return win.Notification.permissionLevel();
             }
         });
     }
-
     win.Notification._requestPermission = win.Notification.requestPermission;
-    Object.defineProperty(win.Notification, 'requestPermission', {
+    Object.defineProperty(win.Notification, "requestPermission", {
         enumerable: true,
         value: function() {
             var promise = this._requestPermission();
@@ -98,10 +89,9 @@
                     then: function(callback) {
                         this._requestPermission(callback);
                     }
-                }
+                };
             }
-
             return promise;
         }
     });
-}(this));
+})(this);
