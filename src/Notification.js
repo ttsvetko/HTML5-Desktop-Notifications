@@ -4,98 +4,6 @@
      */
     //"use strict";
 
-    /**
-     * Notification
-     * @constructor
-     *
-     * Notification constructor for dummy Notification object and
-     * filling gaps in some browsers that do not support full API
-     */
-    function Notification() {
-        // Safari 6 do not support Notification.permission
-        if (!this.permission) {
-            // Check for Notification.permissionLevel()
-            if (this.permissionLevel) {
-                Object.defineProperty(this, 'permission', {
-                    enumerable: true,
-                    get: function() {
-                        return this.permissionLevel();
-                    }
-                });
-            } else {
-                // Set default granted permissions
-                this.permission = PERMISSION_GRANTED;
-            }
-        };
-
-        this._requestPermission = this.requestPermission || function(callback) {
-                callback(PERMISSION_GRANTED);
-            };
-        this.requestPermission = function() {
-            return (this._requestPermission() ||
-                function() {
-                    return {
-                        then: function(callback) {
-                            this._requestPermission(callback);
-                        }
-                    }
-                }
-            );
-        };
-    }
-
-    /**
-     * IE Notification
-     * @constructor
-     */
-    function IENotification() {
-        this.permission = PERMISSION_GRANTED;
-        this.requestPermission = function() {};
-    }
-
-    IENotification.prototype = Notification.prototype;
-
-    /**
-     * Firefox Mobile Notification
-     * @constructor
-     */
-    function MozNotification() {
-        this.permission = PERMISSION_GRANTED;
-        this.requestPermission = function() {
-            return {
-                then: function(callback) {
-                    callback(PERMISSION_GRANTED);
-                }
-            }
-        };
-    }
-
-    MozNotification.prototype = Notification.prototype;
-
-    /**
-     * WebKit Notification
-     * @constructor
-     */
-    function WebKitNotification() {
-        Object.defineProperty(this, permission, {
-            enumerable: true,
-            get: function() {
-                return win.webkitNotifications.checkPermission();
-            }
-        });
-        this.requestPermission = function() {
-            return function() {
-                return {
-                    then: function(callback) {
-                        win.webkitNotifications.requestPermission(callback);
-                    }
-                }
-            };
-        };
-    }
-
-    WebKitNotification.prototype = Notification.prototype;
-
     // local variables
     var PERMISSION_DEFAULT  = "default"; // The user decision is unknown; in this case the application will act as if permission was denied.
     var PERMISSION_GRANTED  = "granted"; // The user has explicitly granted permission for the current origin to display system notifications.
@@ -103,24 +11,97 @@
     // map for the old permission values
     var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED];
 
-    var notification        = (function() {
-        var notification;
-        try {
-            notification = (
-                // W3C
-                (win.Notification && Notification.call(win.Notification)) ||
-                // Firefox Mobile
-                (navigator.mozNotification && new MozNotification) ||
-                // Chrome/Android Browser/Opera Mobile
-                (win.webkitNotifications && new WebKitNotification) ||
-                // IE9+ pinned tab
-                (win.external && win.external.msIsSiteMode() !== undefined && new IENotification) ||
-                // Dummy Notification
-                new Notification
-            );
-        } catch(e) {}
-        return notification;
-    }());
+    function Notification() {}
+    Object.defineProperty(Notification, 'permission', {
+        enumerable: true,
+        get: function() {
+            return PERMISSION_GRANTED;
+        }
+    });
+    Object.defineProperty(Notification, 'requestPermission', {
+        enumerable: true,
+        value: function(callback) {
+            callback(this.permission);
+        }
+    });
 
-    window.Notification = window.Notification || notification;
+    function IENotification() {}
+    Object.defineProperty(IENotification, 'permission', {
+        enumerable: true,
+        get: function() {
+            var isTabPinned = win.external.msIsSiteMode();
+            return isTabPinned ? PERMISSION_GRANTED : PERMISSION_DENIED;
+        }
+    });
+    Object.defineProperty(IENotification, 'requestPermission', {
+        enumerable: true,
+        value: function(callback) {
+            callback(this.permission);
+        }
+    });
+
+    function WebKitNotification() {}
+    Object.defineProperty(WebKitNotification, 'permission', {
+        enumerable: true,
+        get: function() {
+            return PERMISSION[win.webkitNotifications.checkPermission()];
+        }
+    });
+    Object.defineProperty(WebKitNotification, 'requestPermission', {
+        enumerable: true,
+        value: function(callback) {
+            win.webkitNotifications.requestPermission(callback);
+        }
+    });
+
+    try {
+        win.Notification = (
+            // W3C
+            win.Notification ||
+            // Opera Mobile/Android Browser
+            (win.webkitNotifications && WebKitNotification) ||
+            // IE9+ pinned site
+            (win.external && win.external.msIsSiteMode() !== undefined && IENotification)
+        );
+    } catch(e) {
+        // IE check may throws an exception in other browsers
+    } finally {
+        // Use empty Notification in case no support detected
+        win.Notification = win.Notification || Notification;
+    }
+
+    /*
+        Safari6 do not support Notification.permission.
+        Instead, it support Notification.permissionLevel()
+     */
+    if (!win.Notification.permission) {
+        Object.defineProperty(win.Notification, 'permission', {
+            enumerable: true,
+            get: function() {
+                return win.Notification.permissionLevel();
+            }
+        });
+    }
+
+    win.Notification._requestPermission = win.Notification.requestPermission;
+    Object.defineProperty(win.Notification, 'requestPermission', {
+        enumerable: true,
+        value: function() {
+            var promise = this._requestPermission();
+            /*
+                Notification API says that calling Notification.requestPermission
+                returns a promise. In case result is undefined, then we are dealing
+                with the old spec/prefixed or custom implementation
+             */
+            if (!promise) {
+                promise = {
+                    then: function(callback) {
+                        this._requestPermission(callback);
+                    }
+                }
+            }
+
+            return promise;
+        }
+    });
 }(window));
