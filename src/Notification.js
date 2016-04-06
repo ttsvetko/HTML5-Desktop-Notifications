@@ -25,43 +25,17 @@
         }
 
         Object.defineProperties(this, {
-            'body': {
-                value: (options && options.body) || ''
-            },
-
-            'data': {
-                value: (options && options.data) || null
-            },
-
-            'dir': {
-                value: (options && options.dir) || 'auto'
-            },
-
-            'icon': {
-                value: (options && String(options.icon)) || ''
-            },
-
-            'lang': {
-                value: (options && String(options.lang)) || ''
-            },
-
-            'requireInteraction': {
-                value: (options && Boolean(options.requireInteraction)) || false
-            },
-
-            'silent': {
-                value: (options && Boolean(options.silent)) || false
-            },
-
-            'tag': {
-                value: (options && String(options.tag)) || ''
-            },
-
-            'title': {
-                value: String(title)
-            }
+            'body': { value: (options && options.body) || '' },
+            'data': { value: (options && options.data) || null },
+            'dir': { value: (options && options.dir) || 'auto' },
+            'icon': { value: (options && String(options.icon)) || '' },
+            'lang': { value: (options && String(options.lang)) || '' },
+            'requireInteraction': { value: (options && Boolean(options.requireInteraction)) || false },
+            'silent': { value: (options && Boolean(options.silent)) || false },
+            'tag': { value: (options && String(options.tag)) || '' },
+            'title': { value: String(title) }
         });
-    };
+    }
     Object.defineProperty(Notification, 'permission', {
         enumerable: true,
         get: function() {
