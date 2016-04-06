@@ -19,7 +19,49 @@
      * Notification
      * @constructor
      */
-    function Notification() {}
+    function Notification(title, options) {
+        if (!arguments.length) {
+            throw TypeError('Failed to construct \'Notification\': 1 argument required, but only 0 present.');
+        }
+
+        Object.defineProperties(this, {
+            'body': {
+                value: (options && options.body) || ''
+            },
+
+            'data': {
+                value: (options && options.data) || null
+            },
+
+            'dir': {
+                value: (options && options.dir) || 'auto'
+            },
+
+            'icon': {
+                value: (options && String(options.icon)) || ''
+            },
+
+            'lang': {
+                value: (options && String(options.lang)) || ''
+            },
+
+            'requireInteraction': {
+                value: (options && Boolean(options.requireInteraction)) || false
+            },
+
+            'silent': {
+                value: (options && Boolean(options.silent)) || false
+            },
+
+            'tag': {
+                value: (options && String(options.tag)) || ''
+            },
+
+            'title': {
+                value: String(title)
+            }
+        });
+    };
     Object.defineProperty(Notification, 'permission', {
         enumerable: true,
         get: function() {
@@ -33,11 +75,18 @@
         }
     });
 
+    Notification.prototype.onclick = function() {};
+    Notification.prototype.onclose = function() {};
+    Notification.prototype.onerror = function() {};
+    Notification.prototype.onshow = function() {};
+
     /**
      * IE Notification
      * @constructor
      */
-    function IENotification() {}
+    function IENotification(title, options) {
+        Notification.apply(this, arguments);
+    }
     Object.defineProperty(IENotification, 'permission', {
         enumerable: true,
         get: function() {
@@ -52,11 +101,13 @@
         }
     });
 
+    IENotification.prototype = Notification.prototype;
+
     /**
      * WebKit Notification
      * @constructor
      */
-    function WebKitNotification() {}
+    function WebKitNotification(title, options) {}
     Object.defineProperty(WebKitNotification, 'permission', {
         enumerable: true,
         get: function() {
@@ -69,6 +120,8 @@
             win.webkitNotifications.requestPermission(callback);
         }
     });
+
+    WebKitNotification.prototype = Notification.prototype;
 
     /*
         Check Notification support and create Notification
