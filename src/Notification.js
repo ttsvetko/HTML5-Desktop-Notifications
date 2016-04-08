@@ -48,11 +48,9 @@
             callback(this.permission);
         }
     });
-
-    Notification.prototype.onclick = function() {};
-    Notification.prototype.onclose = function() {};
-    Notification.prototype.onerror = function() {};
-    Notification.prototype.onshow = function() {};
+    Notification.prototype.toString = function() {
+        return 'Notification';
+    }
 
     /**
      * IE Notification
@@ -81,7 +79,11 @@
      * WebKit Notification
      * @constructor
      */
-    function WebKitNotification(title, options) {}
+    function WebKitNotification(title, options) {
+        Notification.call(this);
+
+        var notification = new webkitNotifications(title, options);
+    }
     Object.defineProperty(WebKitNotification, 'permission', {
         enumerable: true,
         get: function() {
