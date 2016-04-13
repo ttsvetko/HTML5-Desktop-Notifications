@@ -15,6 +15,8 @@
     // map for the old permission values
     var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED];
 
+    var IENotificationIndex = -1;
+
     /**
      * Notification
      * @constructor
@@ -57,7 +59,30 @@
      * @constructor
      */
     function IENotification(title, options) {
+        var notificationIndex = IENotificationIndex;
+
         Notification.apply(this, arguments);
+
+        Object.defineProperties(this, {
+            close: {
+                value: function() {
+                    if (notificationIndex === IENotificationIndex) {
+                        win.external.msSiteModeClearIconOverlay();
+                    }
+                }
+            }
+        });
+
+        // Clear any previous icon overlay
+        this.close();
+
+        // Set icon
+        win.external.msSiteModeSetIconOverlay(this.icon, this.description || this.title);
+
+        // Blink icon
+        win.external.msSiteModeActivate();
+
+        notificationIndex = ++IENotificationIndex;
     }
     Object.defineProperty(IENotification, 'permission', {
         enumerable: true,
