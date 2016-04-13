@@ -9,11 +9,12 @@
     //"use strict";
 
     // local variables
-    var PERMISSION_DEFAULT  = "default"; // The user decision is unknown; in this case the application will act as if permission was denied.
-    var PERMISSION_GRANTED  = "granted"; // The user has explicitly granted permission for the current origin to display system notifications.
-    var PERMISSION_DENIED   = "denied"; // The user has explicitly denied permission for the current origin to display system notifications.
+    var PERMISSION_DEFAULT      = 'default'; // The user decision is unknown; in this case the application will act as if permission was denied.
+    var PERMISSION_GRANTED      = 'granted'; // The user has explicitly granted permission for the current origin to display system notifications.
+    var PERMISSION_DENIED       = 'denied'; // The user has explicitly denied permission for the current origin to display system notifications.
+    var PERMISSION_NOTSUPPORTED = 'notSupported'; // The Notification API is not supported on current environment
     // map for the old permission values
-    var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED];
+    var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED, PERMISSION_NOTSUPPORTED];
 
     var IENotificationIndex = -1;
 
@@ -41,7 +42,7 @@
     Object.defineProperty(Notification, 'permission', {
         enumerable: true,
         get: function() {
-            return PERMISSION_GRANTED;
+            return PERMISSION_NOTSUPPORTED;
         }
     });
     Object.defineProperty(Notification, 'requestPermission', {
