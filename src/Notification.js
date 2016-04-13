@@ -12,10 +12,16 @@
     var PERMISSION_DEFAULT      = 'default'; // The user decision is unknown; in this case the application will act as if permission was denied.
     var PERMISSION_GRANTED      = 'granted'; // The user has explicitly granted permission for the current origin to display system notifications.
     var PERMISSION_DENIED       = 'denied'; // The user has explicitly denied permission for the current origin to display system notifications.
-    var PERMISSION_NOTSUPPORTED = 'notSupported'; // The Notification API is not supported on current environment
+    var PERMISSION_NOTSUPPORTED = 'notsupported'; // The Notification API is not supported on current environment
     // map for the old permission values
     var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED, PERMISSION_NOTSUPPORTED];
 
+    /*
+        IE does not support Notifications in the same meaning as other modern browsers.
+        On the other side, IE9+(except MS Edge) implement flashing pinned site taskbar buttons.
+        Each time new IE Notification is create, previous flashing and icon overlay is cleared.
+        So, we need to keep track of the notification that calls close method.
+     */
     var IENotificationIndex = -1;
 
     /**
