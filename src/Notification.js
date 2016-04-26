@@ -101,8 +101,10 @@
     });
     Object.defineProperty(IENotification, 'requestPermission', {
         enumerable: true,
-        value: function() {
-            alert(this.REQUEST_PERMISSION_MESSAGE);
+        writable: true,
+        value: function(callback) {
+            alert(this.PERMISSION_REQUEST_MESSAGE);
+            callback(this.permission);
         }
     });
 
@@ -130,8 +132,9 @@
     });
     Object.defineProperty(WebKitNotification, 'requestPermission', {
         enumerable: true,
-        value: function() {
-            win.webkitNotifications.requestPermission();
+        writable: true,
+        value: function(callback) {
+            win.webkitNotifications.requestPermission(callback);
         }
     });
 
@@ -185,10 +188,13 @@
     Object.defineProperty(win.Notification, 'requestPermission', {
         enumerable: true,
         value: function() {
-            var callback;
-            var promise = this._requestPermission(function(permission) {
-                if (callback) {
-                    callback(permission);
+            var newPermission;
+            var userCallback;
+            this._requestPermission(function(permission) {
+                newPermission = permission;
+
+                if (userCallback) {
+                    userCallback(permission);
                 }
             });
             /*
@@ -196,17 +202,19 @@
                 returns a promise. In case result is undefined, then we are dealing
                 with the old spec/prefixed or custom implementation
              */
-            if (!promise) {
-                promise = {
-                    then: function(userCallback) {
-                        if (typeof userCallback === 'function') {
-                            callback = userCallback;
-                        }
-                    }.bind(this)
-                }
-            }
+            return promise = {
+                then: function(callback) {
+                    if (typeof callback !== 'function') {
+                        return;
+                    }
 
-            return promise;
+                    userCallback = callback;
+
+                    if (newPermission) {
+                        callback(newPermission);
+                    }
+                }.bind(this)
+            }
         }
     });
 }(window));
