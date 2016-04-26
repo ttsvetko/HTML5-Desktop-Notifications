@@ -53,6 +53,7 @@
     });
     Object.defineProperty(Notification, 'requestPermission', {
         enumerable: true,
+        writable: true,
         value: function(callback) {
             callback(this.permission);
         }
@@ -100,9 +101,14 @@
     });
     Object.defineProperty(IENotification, 'requestPermission', {
         enumerable: true,
-        value: function(callback) {
-            callback(this.permission);
+        value: function() {
+            alert(this.REQUEST_PERMISSION_MESSAGE);
         }
+    });
+
+    Object.defineProperty(IENotification, 'PERMISSION_REQUEST_MESSAGE', {
+        writable: true,
+        value: 'IE supports notifications in pinned mode only. Pin this page on your taskbar to receive notifications.'
     });
 
     IENotification.prototype = Notification.prototype;
@@ -124,8 +130,8 @@
     });
     Object.defineProperty(WebKitNotification, 'requestPermission', {
         enumerable: true,
-        value: function(callback) {
-            win.webkitNotifications.requestPermission(callback);
+        value: function() {
+            win.webkitNotifications.requestPermission();
         }
     });
 
@@ -179,7 +185,12 @@
     Object.defineProperty(win.Notification, 'requestPermission', {
         enumerable: true,
         value: function() {
-            var promise = this._requestPermission();
+            var callback;
+            var promise = this._requestPermission(function(permission) {
+                if (callback) {
+                    callback(permission);
+                }
+            });
             /*
                 Notification API says that calling Notification.requestPermission
                 returns a promise. In case result is undefined, then we are dealing
@@ -187,8 +198,10 @@
              */
             if (!promise) {
                 promise = {
-                    then: function(callback) {
-                        this._requestPermission(callback);
+                    then: function(userCallback) {
+                        if (typeof userCallback === 'function') {
+                            callback = userCallback;
+                        }
                     }.bind(this)
                 }
             }
