@@ -24,6 +24,10 @@
      */
     var IENotificationIndex = -1;
 
+
+
+
+
     /**
      * Notification
      * @constructor
@@ -61,6 +65,10 @@
     Notification.prototype.toString = function() {
         return 'Notification';
     }
+
+
+
+
 
     /**
      * IE Notification
@@ -115,6 +123,10 @@
 
     IENotification.prototype = Notification.prototype;
 
+
+
+
+
     /**
      * WebKit Notification
      * @constructor
@@ -137,8 +149,11 @@
             win.webkitNotifications.requestPermission(callback);
         }
     });
-
     WebKitNotification.prototype = Notification.prototype;
+
+
+
+
 
     /*
         Check Notification support and create Notification
@@ -158,6 +173,8 @@
         // Use empty Notification in case no support detected
         win.Notification = win.Notification || Notification;
     }
+
+
 
     /*
         Safari6 do not support Notification.permission.
@@ -197,6 +214,7 @@
                     userCallback(permission);
                 }
             });
+            
             /*
                 Notification API says that calling Notification.requestPermission
                 returns a promise. In case result is undefined, then we are dealing
