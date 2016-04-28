@@ -217,11 +217,6 @@
     Object.defineProperty(win.Notification, 'requestPermission', {
         enumerable: true,
         value: function() {
-            /*
-                Notification API says that calling Notification.requestPermission
-                returns a promise. In case result is undefined, then we are dealing
-                with the old spec/prefixed or custom implementation
-             */
             return new Promise(function(resolve, reject) {
                 var promise = requestPermission(function(permission) {
                     resolve(permission);
