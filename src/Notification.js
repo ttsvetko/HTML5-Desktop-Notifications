@@ -17,6 +17,12 @@
     var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED, PERMISSION_NOTSUPPORTED];
 
     /*
+     * Keep the original/constructor defined requestPermission() method in local variable.
+     * The public requestPermission() method will be defind last and will call this private method.
+     */
+    var requestPermission;
+
+    /*
         IE does not support Notifications in the same meaning as other modern browsers.
         On the other side, IE9+(except MS Edge) implement flashing pinned site taskbar buttons.
         Each time new IE Notification is create, previous flashing and icon overlay is cleared.
@@ -111,8 +117,10 @@
         enumerable: true,
         writable: true,
         value: function(callback) {
-            alert(this.PERMISSION_REQUEST_MESSAGE);
-            callback(this.permission);
+            return new Promise(function(resolve, reject) {
+                alert(this.PERMISSION_REQUEST_MESSAGE);
+                resolve(this.permission);
+            }.bind(this));
         }
     });
 
@@ -201,38 +209,26 @@
         Old Spec:
         Notification.requestPermission(callback);
      */
-    win.Notification._requestPermission = win.Notification.requestPermission;
+    requestPermission = win.Notification.requestPermission.bind(win.Notification);
     Object.defineProperty(win.Notification, 'requestPermission', {
         enumerable: true,
         value: function() {
-            var newPermission;
-            var userCallback;
-            this._requestPermission(function(permission) {
-                newPermission = permission;
-
-                if (userCallback) {
-                    userCallback(permission);
-                }
-            });
-            
             /*
                 Notification API says that calling Notification.requestPermission
                 returns a promise. In case result is undefined, then we are dealing
                 with the old spec/prefixed or custom implementation
              */
-            return promise = {
-                then: function(callback) {
-                    if (typeof callback !== 'function') {
-                        return;
-                    }
+            return new Promise(function(resolve, reject) {
+                var promise = requestPermission(function(permission) {
+                    resolve(permission);
+                });
 
-                    userCallback = callback;
+                if (!(promise instanceof Promise)) {
+                    return;
+                }
 
-                    if (newPermission) {
-                        callback(newPermission);
-                    }
-                }.bind(this)
-            }
+                resolve(promise);
+            });
         }
     });
 }(window));
