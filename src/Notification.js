@@ -154,7 +154,11 @@
         enumerable: true,
         writable: true,
         value: function(callback) {
-            win.webkitNotifications.requestPermission(callback);
+            return new Promise(function(resolve, reject) {
+                win.webkitNotifications.requestPermission(function(permission) {
+                    resolve(permission);
+                });
+            });
         }
     });
     WebKitNotification.prototype = Notification.prototype;
