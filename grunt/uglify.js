@@ -11,26 +11,32 @@
         }
     ];
 
-    module.exports = {
-        'options': {
-            'banner': '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-            '<%= grunt.template.today("yyyy-mm-dd") %> */\n',
-            'preserveComments': false
-        },
+    module.exports = function(grunt) {
 
-        'default': {
-            'files': files
-        },
-
-        'dev': {
+        return {
             'options': {
-                'beautify': true,
-                'compress': false,
-                'mangle': false,
-                'preserveComments': true
+                'banner': '/*! <%= pkg.libraryName %> - v<%= pkg.version %> - ' +
+                          '<%= grunt.template.today("yyyy-mm-dd") %>\n\n' + grunt.file.read('License.txt') +
+                          '*/\n\n',
+                'preserveComments': false,
+                'compress': true,
+                'mangle': true
             },
 
-            'files': files
+            'default': {
+                'files': files
+            },
+
+            'dev': {
+                'options': {
+                    'beautify': true,
+                    'compress': false,
+                    'mangle': false,
+                    'preserveComments': true
+                },
+
+                'files': files
+            }
         }
     };
 }());
