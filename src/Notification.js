@@ -99,7 +99,9 @@
         this.close();
 
         // Set icon
-        win.external.msSiteModeSetIconOverlay(this.icon, this.description || this.title);
+        if (this.icon) {
+            win.external.msSiteModeSetIconOverlay(this.icon, this.description || this.title);
+        }
 
         // Blink icon
         win.external.msSiteModeActivate();
