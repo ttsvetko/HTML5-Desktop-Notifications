@@ -43,6 +43,9 @@
             throw TypeError('Failed to construct \'Notification\': 1 argument required, but only 0 present.');
         }
 
+        if (options && 'Object' !== typeof options) {
+            throw TypeError('Failed to construct \'Notification\': parameter 2 (\'options\') is not an object.');
+        }
         Object.defineProperties(this, {
             'body': { value: (options && options.body) || '' },
             'data': { value: (options && options.data) || null },
