@@ -16,6 +16,8 @@
     // map for the old permission values
     var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED, PERMISSION_NOTSUPPORTED];
 
+    var DIRESCTIONS = ['auto', 'ltr', 'rtl']
+
     /*
      * Keep the original/constructor defined requestPermission() method in local variable.
      * The public requestPermission() method will be defind last and will call this private method.
@@ -39,12 +41,19 @@
      * @constructor
      */
     function Notification(title, options) {
+        var dir;
+
         if (!arguments.length) {
             throw TypeError('Failed to construct \'Notification\': 1 argument required, but only 0 present.');
         }
 
         if (options && 'Object' !== typeof options) {
             throw TypeError('Failed to construct \'Notification\': parameter 2 (\'options\') is not an object.');
+        }
+
+        dir = Object(options).dir;
+        if (DIRESCTIONS[dir] === undefined) {
+            throw TypeError('Failed to construct \'Notification\': The provided value \'' + dir +'\' is not a valid enum value of type NotificationDirection.')
         }
         Object.defineProperties(this, {
             'body': { value: (options && options.body) || '' },
