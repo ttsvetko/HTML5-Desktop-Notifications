@@ -55,16 +55,20 @@
         if (DIRESCTIONS[dir] === undefined) {
             throw TypeError('Failed to construct \'Notification\': The provided value \'' + dir +'\' is not a valid enum value of type NotificationDirection.')
         }
+
+        options = Object(options);
+
         Object.defineProperties(this, {
-            'body': { value: (options && options.body) || '' },
-            'data': { value: (options && options.data) || null },
-            'dir': { value: (options && options.dir) || 'auto' },
-            'icon': { value: (options && String(options.icon)) || '' },
-            'lang': { value: (options && String(options.lang)) || '' },
-            'requireInteraction': { value: (options && Boolean(options.requireInteraction)) || false },
-            'silent': { value: (options && Boolean(options.silent)) || false },
-            'tag': { value: (options && String(options.tag)) || '' },
-            'title': { value: String(title) }
+            'body': { value: String(options.body || '') },
+            'data': { value: options.data || null },
+            'dir': { value: dir },
+            'icon': { value: String(options.icon || '') },
+            'lang': { value: String(options.lang || '') },
+            'requireInteraction': { value: Boolean(options.requireInteraction) },
+            'silent': { value: Boolean(options.silent) },
+            'tag': { value: String(options.tag || '') },
+            'title': { value: String(title) },
+            'timestamp': (new Date).getTime()
         });
     }
     Object.defineProperty(Notification, 'permission', {
