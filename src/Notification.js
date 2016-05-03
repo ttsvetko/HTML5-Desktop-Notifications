@@ -31,6 +31,11 @@
         So, we need to keep track of the notification that calls close method.
      */
     var IENotificationIndex = -1;
+    var isIE = false;
+    var getIco = function(icon) {
+        var lastIndex = icon.lastIndexOf('.');
+        return (lastIndex !== -1 ? icon.substr(0, lastIndex) : icon) + '.ico';
+    }
 
 
 
@@ -116,7 +121,7 @@
 
         // Set icon
         if (this.icon) {
-            win.external.msSiteModeSetIconOverlay(this.icon, this.description || this.title);
+            win.external.msSiteModeSetIconOverlay(getIco(this.icon), this.description || this.title);
         }
 
         // Blink icon
@@ -194,7 +199,7 @@
          // Opera Mobile/Android Browser
          (win.webkitNotifications && WebKitNotification) ||
          // IE9+ pinned site
-         (("external" in window) && ("msIsSiteMode" in window.external) && win.external.msIsSiteMode() !== undefined && IENotification) ||
+         (("external" in window) && ("msIsSiteMode" in window.external) && win.external.msIsSiteMode() !== undefined && (isIE = true) && IENotification) ||
          // Notification
          Notification
      );
@@ -243,6 +248,15 @@
             });
         }
     });
+
+    // [IE] Clear notifications when window is focused, clicked or scrolled
+    if (isIE) {
+        ['click', 'scroll', 'focus'].forEach(function(event) {
+            window.addEventListener(event, function() {
+                win.external.msSiteModeClearIconOverlay();
+            });
+        });
+    }
 
     win.Notification = notification
 }(window));
