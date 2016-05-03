@@ -31,6 +31,11 @@
         So, we need to keep track of the notification that calls close method.
      */
     var IENotificationIndex = -1;
+    var IECloseNotificationEvents = ['click', 'scroll', 'focus'];
+    var getIco = function(icon) {
+        var lastIndex = icon.lastIndexOf('.');
+        return (lastIndex !== -1 ? icon.substr(0, lastIndex) : icon) + '.ico';
+    }
 
 
 
@@ -106,6 +111,11 @@
                 value: function() {
                     if (notificationIndex === IENotificationIndex) {
                         win.external.msSiteModeClearIconOverlay();
+
+                        // Remove close events
+                        IECloseNotificationEvents.forEach(function(event) {
+                            window.removeEventListener(event, this.close.bind(this));
+                        }.bind(this));
                     }
                 }
             }
@@ -116,11 +126,16 @@
 
         // Set icon
         if (this.icon) {
-            win.external.msSiteModeSetIconOverlay(this.icon, this.description || this.title);
+            win.external.msSiteModeSetIconOverlay(getIco(this.icon), this.description || this.title);
         }
 
         // Blink icon
         win.external.msSiteModeActivate();
+
+        // Attach close event to window
+        IECloseNotificationEvents.forEach(function(event) {
+            window.addEventListener(event, this.close.bind(this));
+        }.bind(this));
 
         notificationIndex = ++IENotificationIndex;
     }
@@ -243,6 +258,10 @@
             });
         }
     });
+
+
+
+
 
     win.Notification = notification
 }(window));
