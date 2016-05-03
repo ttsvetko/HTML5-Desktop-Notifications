@@ -261,7 +261,5 @@
 
 
 
-
-
     win.Notification = notification
 }(window));
