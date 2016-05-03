@@ -188,21 +188,16 @@
     /*
         Check Notification support and create Notification
      */
-    try {
-        win.Notification = (
-            // W3C
-            win.Notification ||
-            // Opera Mobile/Android Browser
-            (win.webkitNotifications && WebKitNotification) ||
-            // IE9+ pinned site
-            (win.external && win.external.msIsSiteMode() !== undefined && IENotification)
-        );
-    } catch(e) {
-        // IE check may throws an exception in other browsers
-    } finally {
-        // Use empty Notification in case no support detected
-        win.Notification = win.Notification || Notification;
-    }
+     var notification = (
+         // W3C
+         win.Notification ||
+         // Opera Mobile/Android Browser
+         (win.webkitNotifications && WebKitNotification) ||
+         // IE9+ pinned site
+         (("external" in window) && ("msIsSiteMode" in window.external) && win.external.msIsSiteMode() !== undefined && IENotification) ||
+         // Notification
+         Notification
+     );
 
 
 
@@ -210,8 +205,8 @@
         Safari6 do not support Notification.permission.
         Instead, it support Notification.permissionLevel()
      */
-    if (!win.Notification.permission) {
-        Object.defineProperty(win.Notification, 'permission', {
+    if (!notification.permission) {
+        Object.defineProperty(notification, 'permission', {
             enumerable: true,
             get: function() {
                 return this.permissionLevel();
@@ -231,8 +226,8 @@
         Old Spec:
         Notification.requestPermission(callback);
      */
-    requestPermission = win.Notification.requestPermission.bind(win.Notification);
-    Object.defineProperty(win.Notification, 'requestPermission', {
+    requestPermission = notification.requestPermission.bind(notification);
+    Object.defineProperty(notification, 'requestPermission', {
         enumerable: true,
         value: function() {
             return new Promise(function(resolve, reject) {
@@ -248,4 +243,6 @@
             });
         }
     });
+
+    win.Notification = notification
 }(window));
