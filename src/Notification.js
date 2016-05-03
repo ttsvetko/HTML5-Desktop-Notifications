@@ -68,7 +68,7 @@
             'silent': { value: Boolean(options.silent) },
             'tag': { value: String(options.tag || '') },
             'title': { value: String(title) },
-            'timestamp': (new Date).getTime()
+            'timestamp': { value: (new Date).getTime() }
         });
     }
     Object.defineProperty(Notification, 'permission', {
