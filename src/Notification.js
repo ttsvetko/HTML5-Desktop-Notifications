@@ -156,13 +156,34 @@
             }.bind(this));
         }
     });
-
     Object.defineProperty(IENotification, 'PERMISSION_REQUEST_MESSAGE', {
         writable: true,
         value: 'IE supports notifications in pinned mode only. Pin this page on your taskbar to receive notifications.'
     });
 
     IENotification.prototype = Notification.prototype;
+
+
+
+
+
+    /**
+     *
+     */
+    function W3CNotification() {
+        var notification = window.Notification;
+
+        function W3CNotification(title, params) {
+            Notification.apply(this, arguments);
+
+            return new notification(title, params);
+        }
+        W3CNotification.permission = notification.permission;
+        W3CNotification.requestPermission = notification.requestPermission;
+        W3CNotification.prototype = Notification.prototype;
+
+        return W3CNotification;
+    }
 
 
 
@@ -205,7 +226,7 @@
      */
      var notification = (
          // W3C
-         win.Notification ||
+         win.Notification && W3CNotification() ||
          // Opera Mobile/Android Browser
          (win.webkitNotifications && WebKitNotification) ||
          // IE9+ pinned site
