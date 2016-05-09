@@ -8,8 +8,14 @@
 - Google Chrome 32+
 
 # Notes
-- MS Edge does not support Notification API
-- Does not
+- [MS Edge] does not support Notification API
+- [Safari] Do not display Notification if title is not set
+- [Safari] Icon is not displayed - it uses the application icon instance of provided one
+- Have to type of icons - one image format that will be displayed for Chrome/Safari/Firefox and one in .ico format, 16x16 for IE
+    The library automatically will parse the icon name and will add .ico extension if it is not .ico
+
+    The icon resource file must contain a 16x16 icon at 96 dots per inch (dpi). If an icon overlay is already applied, the existing overlay is replaced.
+    Note  To view the icon overlay, the taskbar buttons must be in their default large icon mode. Small taskbar icons do not support icon overlays.
 
 # Permissions
 Notification API defines 3 permission levels for supported environments:
@@ -22,4 +28,6 @@ this code implements an additional permission level:
 - <strong>notsupported</strong> - Notification API is not supported in any format(WHATWG spec or prefixed). Notification could not be displayed. Any Notification API code execution will pass, but no notification will be displayed.
 
 # TODO
-- Build distribution version that combines lie.js(Promise polyfill)(required for IE) and Notification file.
+- Promise is not supported for IE9/10. It should be included by the user.
+- [IE] Implement actions as a thumbBar buttons
+- Add Support for Service Workers
