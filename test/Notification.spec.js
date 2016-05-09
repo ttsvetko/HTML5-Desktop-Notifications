@@ -26,5 +26,11 @@ describe("Notification", function() {
 
         // Test notification with params which is not an object
         expect(function() {return new Notification('', '')}).toThrowError();
+
+        // Test incorrect dir option
+        expect(function() {return new Notification('', {'dir': 'a'})}).toThrowError();
+
+        // Test valid Notification
+        expect('object' === typeof (new Notification(''))).toBe(true);
     });
 });

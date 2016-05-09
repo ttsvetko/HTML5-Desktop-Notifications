@@ -52,7 +52,7 @@
             throw TypeError('Failed to construct \'Notification\': 1 argument required, but only 0 present.');
         }
 
-        if (arguments.length === 2 && 'object' !== typeof options) {
+        if (arguments.length > 1 && 'object' !== typeof options) {
             throw TypeError('Failed to construct \'Notification\': parameter 2 (\'options\') is not an object.');
         }
 
@@ -173,6 +173,9 @@
     function W3CNotification() {
         var notification = window.Notification;
 
+        /**
+         *  W3C Notification constructor
+         */
         function W3CNotification(title, params) {
             Notification.apply(this, arguments);
 
