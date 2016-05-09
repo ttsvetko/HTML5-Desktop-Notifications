@@ -3,3 +3,7 @@
 
 ## node.js modules ##
 node_modules/
+npm-debug.log
+
+## grunt directory ##
+.grunt

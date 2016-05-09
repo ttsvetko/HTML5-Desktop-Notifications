@@ -6,12 +6,15 @@ module.exports = {
     // Default Grunt task that builds the Deep blue theme ready for production
     'default': [
         'clean',
-        'uglify:default'
+        'jasmine',
+        'uglify:default',
+        'uglify:dev'
     ],
 
     // Development Grunt build task
     'dev': [
         'clean',
-        'uglify:dev'
+        'jasmine',
+        'watch'
     ]
 };

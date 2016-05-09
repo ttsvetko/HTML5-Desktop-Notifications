@@ -13,7 +13,8 @@ module.exports = function gruntFn (grunt) {
             'pkg': grunt.file.readJSON('package.json'),
             'dir': {
                 'source': 'src',
-                'production': 'dist'
+                'production': 'dist',
+                'tests': 'test'
             }
         }
     });

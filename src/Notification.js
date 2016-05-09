@@ -52,7 +52,7 @@
             throw TypeError('Failed to construct \'Notification\': 1 argument required, but only 0 present.');
         }
 
-        if (options && 'object' !== typeof options) {
+        if (arguments.length === 2 && 'object' !== typeof options) {
             throw TypeError('Failed to construct \'Notification\': parameter 2 (\'options\') is not an object.');
         }
 

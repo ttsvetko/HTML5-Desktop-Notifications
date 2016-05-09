@@ -4,11 +4,7 @@
     'use strict';
 
     var files = [
-        {
-            '<%= dir.production %>/Notification.js': [
-                '<%= dir.source %>/Notification.js'
-            ]
-        }
+        '<%= dir.source %>/Notification.js'
     ];
 
     module.exports = function(grunt) {
@@ -24,7 +20,11 @@
             },
 
             'default': {
-                'files': files
+                'files': [
+                    {
+                        '<%= dir.production %>/Notification.min.js': files
+                    }
+                ]
             },
 
             'dev': {
@@ -35,7 +35,11 @@
                     'preserveComments': true
                 },
 
-                'files': files
+                'files': [
+                    {
+                        '<%= dir.production %>/Notification.js': files
+                    }
+                ]
             }
         }
     };
