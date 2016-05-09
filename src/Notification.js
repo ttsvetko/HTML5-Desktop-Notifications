@@ -62,7 +62,7 @@
         }
 
         dir = Object(options).dir;
-        if (dir && DIRESCTIONS[dir] === undefined) {
+        if (DIRESCTIONS.indexOf(dir) === -1) {
             throw TypeError('Failed to construct \'Notification\': The provided value \'' + dir +'\' is not a valid enum value of type NotificationDirection.')
         }
 

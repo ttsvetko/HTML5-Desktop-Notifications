@@ -5,19 +5,21 @@ describe("Notification", function() {
         expect(Notification instanceof Object).toBe(true);
     });
 
-    it('Should have static properties', function() {
-        var permission = Notification.permission;
-        var requestPermission = Notification.requestPermission();
-
-        // Check for existance of Notification.permission
+    it('Permission Property', function() {
         expect(typeof Notification.permission).toBeDefined();
         expect(typeof Notification.permission).toBe('string');
+    });
 
-        // Check for existance of Notification.requestPermission
+    it('RequestPermission method', function() {
+        var permission = Notification.permission;
+        var requestPermission = Notification.requestPermission();
         expect(typeof Notification.requestPermission).toBeDefined();
         expect(typeof Notification.requestPermission).toBe('function');
-        // requestPermission() should return Promise
         expect(Notification.requestPermission() instanceof Promise).toBe(true);
+    });
+
+    it('Test dir param', function() {
+        
     });
 
     it('Instance creation', function() {
