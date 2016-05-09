@@ -25,6 +25,11 @@
     var requestPermission;
 
     /*
+     * Keep the original window.Notification Object.
+     */
+    var _notification = Object(window.Notification);
+
+    /*
         IE does not support Notifications in the same meaning as other modern browsers.
         On the other side, IE9+(except MS Edge) implement flashing pinned site taskbar buttons.
         Each time new IE Notification is create, previous flashing and icon overlay is cleared.
@@ -168,25 +173,17 @@
 
 
     /**
-     *
+     * WHATWG Notification
      */
-    function W3CNotification() {
-        var notification = window.Notification;
+     function WHATWGNotification(title, params) {
+         Notification.apply(this, arguments);
 
-        /**
-         *  W3C Notification constructor
-         */
-        function W3CNotification(title, params) {
-            Notification.apply(this, arguments);
+         return new _notification(title, params);
+     }
 
-            return new notification(title, params);
-        }
-        W3CNotification.permission = notification.permission;
-        W3CNotification.requestPermission = notification.requestPermission;
-        W3CNotification.prototype = Notification.prototype;
-
-        return W3CNotification;
-    }
+     WHATWGNotification.permission = _notification.permission;
+     WHATWGNotification.requestPermission = _notification.requestPermission;
+     WHATWGNotification.prototype = Notification.prototype;
 
 
 
@@ -229,7 +226,7 @@
      */
      var notification = (
          // W3C
-         win.Notification && W3CNotification() ||
+         win.Notification && WHATWGNotification ||
          // Opera Mobile/Android Browser
          (win.webkitNotifications && WebKitNotification) ||
          // IE9+ pinned site
