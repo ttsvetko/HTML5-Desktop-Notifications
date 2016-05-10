@@ -19,7 +19,16 @@ describe("Notification", function() {
     });
 
     it('Test dir param', function() {
-        
+        // Test incorrect dir option
+        expect(function() {return new Notification('', {'dir': 'a'})}).toThrowError();
+        expect(function() {return new Notification('', {'dir': 'undefined'})}).toThrowError();
+        expect(function() {return new Notification('', {'dir': null})}).toThrowError();
+
+
+        // Test valid dir params: undefined/ltr/rtl
+        expect((new Notification('', {'dir': undefined})) instanceof Notification).toBe(true);
+        expect((new Notification('', {'dir': 'ltr'})) instanceof Notification).toBe(true);
+        expect((new Notification('', {'dir': 'rtl'})) instanceof Notification).toBe(true);
     });
 
     it('Instance creation', function() {
@@ -29,10 +38,7 @@ describe("Notification", function() {
         // Test notification with params which is not an object
         expect(function() {return new Notification('', '')}).toThrowError();
 
-        // Test incorrect dir option
-        expect(function() {return new Notification('', {'dir': 'a'})}).toThrowError();
-
         // Test valid Notification
-        expect('object' === typeof (new Notification(''))).toBe(true);
+        expect((new Notification('')) instanceof Notification).toBe(true);
     });
 });

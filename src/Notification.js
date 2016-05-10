@@ -25,9 +25,9 @@
     var requestPermission;
 
     /*
-     * Keep the original window.Notification Object.
+     * Keep the original window.Notification Object(if exists, otherwise it will be an empty object).
      */
-    var _notification = Object(window.Notification);
+    var _Notification = Object(window.Notification);
 
     /*
         IE does not support Notifications in the same meaning as other modern browsers.
@@ -40,6 +40,10 @@
     var getIco = function(icon) {
         var lastIndex = icon.lastIndexOf('.');
         return (lastIndex !== -1 ? icon.substr(0, lastIndex) : icon) + '.ico';
+    }
+
+    var isFunction = function(fn) {
+        return (typeof fn === 'function');
     }
 
 
@@ -62,23 +66,32 @@
         }
 
         dir = Object(options).dir;
-        if (DIRESCTIONS.indexOf(dir) === -1) {
+        if (dir !== undefined && DIRESCTIONS.indexOf(dir) === -1) {
             throw TypeError('Failed to construct \'Notification\': The provided value \'' + dir +'\' is not a valid enum value of type NotificationDirection.')
         }
 
         options = Object(options);
 
         Object.defineProperties(this, {
+            /* TODO: actions property */
+            /* TODO: badge property */
             'body': { value: String(options.body || '') },
+
             'data': { value: options.data || null },
             'dir': { value: dir },
             'icon': { value: String(options.icon || '') },
             'lang': { value: String(options.lang || '') },
+            /* TODO: noscreen property */
+            'onclick': { value : null, writable: true },
+            'onerror': { value : null, writable: true },
+            /* TODO: renotify property */
             'requireInteraction': { value: Boolean(options.requireInteraction) },
+            /* TODO: sound property */
             'silent': { value: Boolean(options.silent) },
             'tag': { value: String(options.tag || '') },
             'title': { value: String(title) },
-            'timestamp': { value: (new Date).getTime() }
+            'timestamp': { value: (new Date).getTime() },
+            /* TODO: vibrate property */
         });
     }
     Object.defineProperty(Notification, 'permission', {
@@ -178,11 +191,11 @@
      function WHATWGNotification(title, params) {
          Notification.apply(this, arguments);
 
-         return new _notification(title, params);
+         var notification = new _Notification(title, params);
      }
 
-     WHATWGNotification.permission = _notification.permission;
-     WHATWGNotification.requestPermission = _notification.requestPermission;
+     WHATWGNotification.permission = _Notification.permission;
+     WHATWGNotification.requestPermission = _Notification.requestPermission;
      WHATWGNotification.prototype = Notification.prototype;
 
 
