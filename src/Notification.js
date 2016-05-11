@@ -37,6 +37,11 @@
         return (typeof fn === 'function');
     }
 
+    /*
+     * Internal Notificaiton constructor. Keeps the original Notification
+     * constructor if any or use empty function constructor for browsers
+     * that do not support Notifications
+     */
     var _Notification = (
         window.Notification ||
         // Opera Mobile/Android Browser
