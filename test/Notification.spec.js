@@ -40,5 +40,8 @@ describe("Notification", function() {
 
         // Test valid Notification
         expect((new Notification('')) instanceof Notification).toBe(true);
+
+        // If title is null/undefined - it should be displayed as null/undefined
+        expect((new Notification(null)).title).toBe('null')
     });
 });

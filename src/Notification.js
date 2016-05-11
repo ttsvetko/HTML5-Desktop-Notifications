@@ -2,7 +2,7 @@
 /** @namespace window.webkitNotifications */
 /** @namespace window.external */
 
-;(function(win, undefined) {
+;(function() {
     /*
      Safari native methods required for Notifications do NOT run in strict mode.
      */
@@ -16,18 +16,9 @@
     // map for the old permission values
     var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED, PERMISSION_NOTSUPPORTED];
 
-    var DIRESCTIONS = ['auto', 'ltr', 'rtl']
+    var DIRESCTIONS = ['auto', 'ltr', 'rtl'];
 
-    /*
-     * Keep the original/constructor defined requestPermission() method in local variable.
-     * The public requestPermission() method will be defind last and will call this private method.
-     */
-    var requestPermission;
-
-    /*
-     * Keep the original window.Notification Object(if exists, otherwise it will be an empty object).
-     */
-    var _Notification = Object(window.Notification);
+    var emptyFn = function() {};
 
     /*
         IE does not support Notifications in the same meaning as other modern browsers.
@@ -46,83 +37,21 @@
         return (typeof fn === 'function');
     }
 
-
-
-
-
-    /**
-     * Notification
-     * @constructor
-     */
-    function Notification(title, options) {
-        var dir;
-
-        if (!arguments.length) {
-            throw TypeError('Failed to construct \'Notification\': 1 argument required, but only 0 present.');
-        }
-
-        if (arguments.length > 1 && 'object' !== typeof options) {
-            throw TypeError('Failed to construct \'Notification\': parameter 2 (\'options\') is not an object.');
-        }
-
-        dir = Object(options).dir;
-        if (dir !== undefined && DIRESCTIONS.indexOf(dir) === -1) {
-            throw TypeError('Failed to construct \'Notification\': The provided value \'' + dir +'\' is not a valid enum value of type NotificationDirection.')
-        }
-
-        options = Object(options);
-
-        Object.defineProperties(this, {
-            /* TODO: actions property */
-            /* TODO: badge property */
-            'body': { value: String(options.body || '') },
-
-            'data': { value: options.data || null },
-            'dir': { value: dir },
-            'icon': { value: String(options.icon || '') },
-            'lang': { value: String(options.lang || '') },
-            /* TODO: noscreen property */
-            'onclick': { value : null, writable: true },
-            'onerror': { value : null, writable: true },
-            /* TODO: renotify property */
-            'requireInteraction': { value: Boolean(options.requireInteraction) },
-            /* TODO: sound property */
-            'silent': { value: Boolean(options.silent) },
-            'tag': { value: String(options.tag || '') },
-            'title': { value: String(title) },
-            'timestamp': { value: (new Date).getTime() },
-            /* TODO: vibrate property */
-        });
-    }
-    Object.defineProperty(Notification, 'permission', {
-        enumerable: true,
-        get: function() {
-            return PERMISSION_NOTSUPPORTED;
-        }
-    });
-    Object.defineProperty(Notification, 'requestPermission', {
-        enumerable: true,
-        writable: true,
-        value: function(callback) {
-            callback(this.permission);
-        }
-    });
-    Notification.prototype.toString = function() {
-        return 'Notification';
-    }
-
-
-
-
+    var _Notification = (
+        window.Notification ||
+        // Opera Mobile/Android Browser
+        (window.webkitNotifications && WebKitNotification) ||
+        // IE9+ pinned site
+        (("external" in window) && ("msIsSiteMode" in window.external) && window.external.msIsSiteMode() !== undefined && IENotification) ||
+        // Notifications Not supported. Return emptry function constructor
+        emptyFn
+    )
 
     /**
-     * IE Notification
-     * @constructor
+     * @constructor IE Notification
      */
     function IENotification(title, options) {
         var notificationIndex = IENotificationIndex;
-
-        Notification.apply(this, arguments);
 
         Object.defineProperties(this, {
             close: {
@@ -179,38 +108,10 @@
         value: 'IE supports notifications in pinned mode only. Pin this page on your taskbar to receive notifications.'
     });
 
-    IENotification.prototype = Notification.prototype;
-
-
-
-
-
     /**
-     * WHATWG Notification
+     * @constructor WebKit Notification
      */
-     function WHATWGNotification(title, params) {
-         Notification.apply(this, arguments);
-
-         var notification = new _Notification(title, params);
-     }
-
-     WHATWGNotification.permission = _Notification.permission;
-     WHATWGNotification.requestPermission = _Notification.requestPermission;
-     WHATWGNotification.prototype = Notification.prototype;
-
-
-
-
-
-    /**
-     * WebKit Notification
-     * @constructor
-     */
-    function WebKitNotification(title, options) {
-        Notification.call(this);
-
-        var notification = new webkitNotifications(title, options);
-    }
+    function WebKitNotification() {}
     Object.defineProperty(WebKitNotification, 'permission', {
         enumerable: true,
         get: function() {
@@ -228,40 +129,95 @@
             });
         }
     });
-    WebKitNotification.prototype = Notification.prototype;
-
-
-
-
-
-    /*
-        Check Notification support and create Notification
-     */
-     var notification = (
-         // W3C
-         win.Notification && WHATWGNotification ||
-         // Opera Mobile/Android Browser
-         (win.webkitNotifications && WebKitNotification) ||
-         // IE9+ pinned site
-         (("external" in window) && ("msIsSiteMode" in window.external) && win.external.msIsSiteMode() !== undefined && IENotification) ||
-         // Notification
-         Notification
-     );
-
-
 
     /*
         Safari6 do not support Notification.permission.
         Instead, it support Notification.permissionLevel()
      */
-    if (!notification.permission) {
-        Object.defineProperty(notification, 'permission', {
+    if (!_Notification.permission) {
+        Object.defineProperty(_Notification, 'permission', {
             enumerable: true,
             get: function() {
-                return this.permissionLevel();
+                return _Notification.permissionLevel() || PERMISSION_NOTSUPPORTED;
             }
         });
     }
+
+    if (!_Notification.requestPermission) {
+        Object.defineProperty(_Notification, 'requestPermission', {
+            enumerable: true,
+            writable: true,
+            value: function(callback) {
+                callback(this.permission);
+            }
+        });
+    }
+
+    /**
+     * @constructor Notification
+     */
+    function Notification(title, options) {
+        var dir;
+        var notification;
+
+        if (!arguments.length) {
+            throw TypeError('Failed to construct \'Notification\': 1 argument required, but only 0 present.');
+        }
+
+        /*
+            Chrome display notifications when title is empty screen, but
+            Safari do NOT.
+
+            Set title to non-display characted in order to display notifications
+            in Safari as well when title is empty.
+         */
+        if (title === '') {
+            title = '\b'
+        }
+
+        if (arguments.length > 1 && 'object' !== typeof options) {
+            throw TypeError('Failed to construct \'Notification\': parameter 2 (\'options\') is not an object.');
+        }
+
+        dir = Object(options).dir;
+        if (dir !== undefined && DIRESCTIONS.indexOf(dir) === -1) {
+            throw TypeError('Failed to construct \'Notification\': The provided value \'' + dir +'\' is not a valid enum value of type NotificationDirection.')
+        }
+
+        options = Object(options);
+
+        notification = new _Notification(title, options);
+
+        Object.defineProperties(this, {
+            /* TODO: actions property */
+            /* TODO: badge property */
+            'body': { value: String(options.body || '') },
+
+            'data': { value: options.data || null },
+            'dir': { value: dir },
+            'icon': { value: String(options.icon || '') },
+            'lang': { value: String(options.lang || '') },
+            /* TODO: noscreen property */
+            'onclick': { value : null, writable: true },
+            'onerror': { value : null, writable: true },
+            /* TODO: renotify property */
+            'requireInteraction': { value: Boolean(options.requireInteraction) },
+            /* TODO: sound property */
+            'silent': { value: Boolean(options.silent) },
+            'tag': { value: String(options.tag || '') },
+            'title': { value: String(title) },
+            'timestamp': { value: (new Date).getTime() },
+            /* TODO: vibrate property */
+        });
+    }
+
+
+    Object.defineProperty(Notification, 'permission', {
+        enumerable: true,
+        get: function() {
+            return _Notification.permission;
+        }
+    });
 
     /*
         Notification.requestPermission should return a Promise(by spec).
@@ -275,25 +231,22 @@
         Old Spec:
         Notification.requestPermission(callback);
      */
-    requestPermission = notification.requestPermission.bind(notification);
-    Object.defineProperty(notification, 'requestPermission', {
-        enumerable: true,
-        value: function() {
-            return new Promise(function(resolve, reject) {
-                var promise = requestPermission(function(permission) {
-                    resolve(permission);
-                });
+     Object.defineProperty(Notification, 'requestPermission', {
+         enumerable: true,
+         value: function() {
+             return new Promise(function(resolve, reject) {
+                 var promise = _Notification.requestPermission(function(permission) {
+                     resolve(permission);
+                 });
 
-                if (!(promise instanceof Promise)) {
-                    return;
-                }
+                 if (!(promise instanceof Promise)) {
+                     return;
+                 }
 
-                resolve(promise);
-            });
-        }
-    });
+                 resolve(promise);
+             });
+         }
+     });
 
-
-
-    win.Notification = notification
-}(window));
+    window.Notification = Notification;
+}());
