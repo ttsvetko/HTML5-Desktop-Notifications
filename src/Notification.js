@@ -138,7 +138,7 @@
         Object.defineProperty(_Notification, 'permission', {
             enumerable: true,
             get: function() {
-                return _Notification.permissionLevel() || PERMISSION_NOTSUPPORTED;
+                return (_Notification.permissionLevel && _Notification.permissionLevel()) || PERMISSION_NOTSUPPORTED;
             }
         });
     }
