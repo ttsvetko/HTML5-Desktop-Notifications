@@ -57,7 +57,7 @@
             close: {
                 value: function() {
                     if (notificationIndex === IENotificationIndex) {
-                        win.external.msSiteModeClearIconOverlay();
+                        window.external.msSiteModeClearIconOverlay();
 
                         // Remove close events
                         IECloseNotificationEvents.forEach(function(event) {
@@ -73,11 +73,11 @@
 
         // Set icon
         if (this.icon) {
-            win.external.msSiteModeSetIconOverlay(getIco(this.icon), this.description || this.title);
+            window.external.msSiteModeSetIconOverlay(getIco(this.icon), this.description || this.title);
         }
 
         // Blink icon
-        win.external.msSiteModeActivate();
+        window.external.msSiteModeActivate();
 
         // Attach close event to window
         IECloseNotificationEvents.forEach(function(event) {
@@ -89,7 +89,7 @@
     Object.defineProperty(IENotification, 'permission', {
         enumerable: true,
         get: function() {
-            var isTabPinned = win.external.msIsSiteMode();
+            var isTabPinned = window.external.msIsSiteMode();
             return isTabPinned ? PERMISSION_GRANTED : PERMISSION_DENIED;
         }
     });
@@ -115,7 +115,7 @@
     Object.defineProperty(WebKitNotification, 'permission', {
         enumerable: true,
         get: function() {
-            return PERMISSIONS[win.webkitNotifications.checkPermission()];
+            return PERMISSIONS[window.webkitNotifications.checkPermission()];
         }
     });
     Object.defineProperty(WebKitNotification, 'requestPermission', {
@@ -123,7 +123,7 @@
         writable: true,
         value: function(callback) {
             return new Promise(function(resolve, reject) {
-                win.webkitNotifications.requestPermission(function(permission) {
+                window.webkitNotifications.requestPermission(function(permission) {
                     resolve(permission);
                 });
             });
