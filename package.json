@@ -28,6 +28,7 @@
     "grunt-eslint": "latest",
 
     "karma": "latest",
+    "jasmine-core": "latest",
     "phantomjs-prebuilt": "latest",
     "karma-chrome-launcher": "latest",
     "karma-firefox-launcher": "latest",
