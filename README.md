@@ -1,5 +1,7 @@
 # DO NOT USE! IN DEVELOPMENT
 
+![Build Status](https://travis-ci.org/ttsvetko/HTML5-Desktop-Notifications.svg?branch=v2)
+
 # HTML 5 Desktop Notification
 
 # Support
