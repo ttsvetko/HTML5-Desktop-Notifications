@@ -42,7 +42,8 @@
   "scripts": {
     "grunt": "grunt -v",
     "grunt:dev": "grunt -v dev",
-    "karma": "karma start"
+    "karma": "karma start",
+    "test": "./node_modules/.bin/karma start --single-run"
   },
   "private": true
 }
