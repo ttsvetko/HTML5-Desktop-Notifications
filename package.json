@@ -45,7 +45,7 @@
     "grunt": "grunt -v",
     "grunt:dev": "grunt -v dev",
     "karma": "karma start",
-    "test": "./node_modules/.bin/karma start --browsers [Firefox,PhantomJS] --single-run"
+    "test": "./node_modules/.bin/karma start --browsers Firefox --single-run"
   },
   "private": true
 }
