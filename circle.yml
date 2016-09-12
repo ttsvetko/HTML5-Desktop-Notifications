@@ -9,3 +9,9 @@ machine:
 dependencies:
   post:
     - npm run bower install
+
+test:
+  post:
+    - npm run grunt
+    - mkdir $CIRCLE_ARTIFACTS/dist
+    - mv dist/*.js $CIRCLE_ARTIFACTS/dist
