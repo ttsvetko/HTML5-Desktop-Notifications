@@ -5,3 +5,15 @@ before_script:
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
     - npm run bower install
+
+before_deploy:
+    - npm run grunt
+deploy:
+  provider: releases
+  api_key: "48c38ce98fc948073b3eb6f9646a16eb66576736"
+  file:
+    - dist/Notification.js
+    - dist/Notification.min.js
+  skip_cleanup: true
+  on:
+    tags: true
