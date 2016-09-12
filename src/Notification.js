@@ -31,9 +31,7 @@
         return (lastIndex !== -1 ? icon.substr(0, lastIndex) : icon) + '.ico';
     };
 
-    var isFunction = function(fn) {
-        return (typeof fn === 'function');
-    };
+
 
     /*
      * Internal Notificaiton constructor. Keeps the original Notification
@@ -286,6 +284,8 @@
              });
          }
      });
+
+
 
     window.Notification = Notification;
 }());
