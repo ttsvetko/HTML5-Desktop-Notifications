@@ -42,6 +42,7 @@
   },
   "dependencies": {},
   "scripts": {
+    "bower": "bower",
     "grunt": "grunt -v",
     "grunt:dev": "grunt -v dev",
     "karma": "karma start",

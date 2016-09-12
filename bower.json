@@ -7,6 +7,11 @@
     ],
     "description": "A small library that unifies the HTML5 Notifications APIs across different browsers including IE9 & IE10.",
     "main": "",
+
+    "devDependencies": {
+        "calvinmetcalf/lie": ""
+    },
+
     "keywords": [
         "html5",
         "notifications"

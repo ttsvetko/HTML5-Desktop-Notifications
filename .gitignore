@@ -7,3 +7,6 @@ npm-debug.log
 
 ## grunt directory ##
 .grunt
+
+## bower
+bower_components/

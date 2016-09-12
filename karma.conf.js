@@ -16,7 +16,7 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         files: [
             'src/Notification.js',
-            {pattern: 'test/vendor/lie.polyfill.min.js', watch: false},
+            {pattern: 'bower_components/lie/dist/lie.polyfill.min.js', watch: false},
             'test/Notification.spec.js'
         ],
 
