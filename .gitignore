@@ -10,3 +10,6 @@ npm-debug.log
 
 ## bower
 bower_components/
+
+## production
+dist/
