@@ -20,6 +20,8 @@
     "node": ">=5"
   },
   "devDependencies": {
+    "bower": "latest",
+
     "grunt": "latest",
     "grunt-cli": "latest",
     "grunt-contrib-clean": "latest",
