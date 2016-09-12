@@ -7,11 +7,5 @@ machine:
 
 ## Customize dependencies
 dependencies:
-  pre:
-    - npm install
+  post:
     - npm run bower install
-
-## Customize test commands
-test:
-  override:
-    - npm test
