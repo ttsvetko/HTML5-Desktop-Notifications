@@ -48,7 +48,7 @@
     "grunt": "grunt -v",
     "grunt:dev": "grunt -v dev",
     "karma": "karma start",
-    "test": "karma start --browsers Firefox,Opera --single-run"
+    "test": "karma start --browsers Firefox --single-run"
   },
   "private": true
 }
