@@ -84,7 +84,7 @@
 
         Object.defineProperties(this, {
             close: {
-                value: function() {
+                value: function(event) {
                     if (notificationIndex === IENotificationIndex) {
                         window.external.msSiteModeClearIconOverlay();
 
@@ -92,6 +92,9 @@
                         IECloseNotificationEvents.forEach(function(event) {
                             window.removeEventListener(event, this.close.bind(this));
                         }.bind(this));
+
+                        this.dispatchEvent('click');
+                        this.dispatchEvent('close');
                     }
                 }
             }
@@ -142,6 +145,11 @@
         value: 'IE supports notifications in pinned mode only. Pin this page on your taskbar to receive notifications.'
     });
 
+    try {
+        IENotification.prototype = EventTarget.prototype;
+    } catch (e) {
+        // Safari does not expose the EventTarget object
+    }
 
 
 
