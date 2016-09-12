@@ -1,0 +1,17 @@
+# Customize the test machine
+machine:
+  # Version of ruby to use
+  node:
+    version:
+      6.10
+
+## Customize dependencies
+dependencies:
+  pre:
+    - npm install
+    - npm run bower install
+
+## Customize test commands
+test:
+  override:
+    - npm test
