@@ -254,6 +254,23 @@
             'title': { value: String(title) },
             'timestamp': { value: (new Date()).getTime() },
             /* TODO: vibrate property */
+
+            /* Proxy EventTarget methods */
+            'addEventListener': {
+                value: function() {
+                    return notification.addEventListener.apply(notification, arguments);
+                }
+            },
+            'dispatchEvent': {
+                value: function() {
+                    return notification.dispatchEvent.apply(notification, arguments);
+                }
+            },
+            'removeEventListener': {
+                value: function() {
+                    return notification.removeEventListener.apply(notification, arguments);
+                }
+            }
         });
     }
 
