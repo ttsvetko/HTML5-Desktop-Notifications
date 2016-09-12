@@ -113,7 +113,10 @@
         writable: true,
         value: function(callback) {
             return new Promise(function(resolve, reject) {
+                if (this.permission === PERMISSION_DENIED) {
                 alert(this.PERMISSION_REQUEST_MESSAGE);
+                }
+
                 resolve(this.permission);
             }.bind(this));
         }
