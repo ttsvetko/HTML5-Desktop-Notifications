@@ -13,5 +13,5 @@ dependencies:
 test:
   post:
     - npm run grunt
-    - mkdir $CIRCLE_ARTIFACTS/dist
-    - mv dist/*.js $CIRCLE_ARTIFACTS/dist
+    - mkdir $CIRCLE_ARTIFACTS
+    - mv dist/*.js $CIRCLE_ARTIFACTS

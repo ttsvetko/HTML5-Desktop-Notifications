@@ -1,4 +1,5 @@
 ![Build Status](https://travis-ci.org/ttsvetko/HTML5-Desktop-Notifications.svg?branch=v2)
+[![CircleCI](https://circleci.com/gh/ttsvetko/HTML5-Desktop-Notifications/tree/v2.svg?style=svg)](https://circleci.com/gh/ttsvetko/HTML5-Desktop-Notifications/tree/v2)
 
 # HTML 5 Desktop Notification
 
