@@ -10,6 +10,7 @@
 - Google Chrome 32+
 
 # Notes
+- [IE 9][IE 10] Does not support Promise. Polyfill required.
 - [MS Edge] does not support Notification API
 - [Safari] Do not display Notification if title is not set
 - [Safari] Icon is not displayed - it uses the application icon instance of provided one
