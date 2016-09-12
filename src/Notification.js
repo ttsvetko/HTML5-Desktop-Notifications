@@ -18,8 +18,6 @@
 
     var DIRESCTIONS = ['auto', 'ltr', 'rtl'];
 
-    var emptyFn = function() {};
-
     /*
         IE does not support Notifications in the same meaning as other modern browsers.
         On the other side, IE9+(except MS Edge) implement flashing pinned site taskbar buttons.
@@ -31,11 +29,11 @@
     var getIco = function(icon) {
         var lastIndex = icon.lastIndexOf('.');
         return (lastIndex !== -1 ? icon.substr(0, lastIndex) : icon) + '.ico';
-    }
+    };
 
     var isFunction = function(fn) {
         return (typeof fn === 'function');
-    }
+    };
 
     /*
      * Internal Notificaiton constructor. Keeps the original Notification
@@ -48,9 +46,20 @@
         (window.webkitNotifications && WebKitNotification) ||
         // IE9+ pinned site
         (("external" in window) && ("msIsSiteMode" in window.external) && window.external.msIsSiteMode() !== undefined && IENotification) ||
-        // Notifications Not supported. Return emptry function constructor
-        emptyFn
-    )
+        // Notifications Not supported. Return dummy constructor
+        DummyNotification
+    );
+
+
+
+
+
+    // TODO: Implement required methods
+    function DummyNotification() {}
+
+
+
+
 
     /**
      * @constructor IE Notification
@@ -98,6 +107,7 @@
             return isTabPinned ? PERMISSION_GRANTED : PERMISSION_DENIED;
         }
     });
+
     Object.defineProperty(IENotification, 'requestPermission', {
         enumerable: true,
         writable: true,
@@ -108,21 +118,28 @@
             }.bind(this));
         }
     });
+
     Object.defineProperty(IENotification, 'PERMISSION_REQUEST_MESSAGE', {
         writable: true,
         value: 'IE supports notifications in pinned mode only. Pin this page on your taskbar to receive notifications.'
     });
 
+
+
+
+
     /**
      * @constructor WebKit Notification
      */
     function WebKitNotification() {}
+
     Object.defineProperty(WebKitNotification, 'permission', {
         enumerable: true,
         get: function() {
             return PERMISSIONS[window.webkitNotifications.checkPermission()];
         }
     });
+
     Object.defineProperty(WebKitNotification, 'requestPermission', {
         enumerable: true,
         writable: true,
@@ -134,6 +151,10 @@
             });
         }
     });
+
+
+
+
 
     /*
         Safari6 do not support Notification.permission.
@@ -158,6 +179,10 @@
         });
     }
 
+
+
+
+
     /**
      * @constructor Notification
      */
@@ -177,7 +202,7 @@
             in Safari as well when title is empty.
          */
         if (title === '') {
-            title = '\b'
+            title = '\b';
         }
 
         if (arguments.length > 1 && 'object' !== typeof options) {
@@ -186,7 +211,7 @@
 
         dir = Object(options).dir;
         if (dir !== undefined && DIRESCTIONS.indexOf(dir) === -1) {
-            throw TypeError('Failed to construct \'Notification\': The provided value \'' + dir +'\' is not a valid enum value of type NotificationDirection.')
+            throw TypeError('Failed to construct \'Notification\': The provided value \'' + dir +'\' is not a valid enum value of type NotificationDirection.');
         }
 
         options = Object(options);
@@ -211,11 +236,10 @@
             'silent': { value: Boolean(options.silent) },
             'tag': { value: String(options.tag || '') },
             'title': { value: String(title) },
-            'timestamp': { value: (new Date).getTime() },
+            'timestamp': { value: (new Date()).getTime() },
             /* TODO: vibrate property */
         });
     }
-
 
     Object.defineProperty(Notification, 'permission', {
         enumerable: true,
