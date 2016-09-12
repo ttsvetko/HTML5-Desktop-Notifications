@@ -80,7 +80,7 @@
      * @constructor IENotification
      */
     function IENotification(title, options) {
-        var notificationIndex = IENotificationIndex;
+        var notificationIndex;
 
         Object.defineProperties(this, {
             close: {
