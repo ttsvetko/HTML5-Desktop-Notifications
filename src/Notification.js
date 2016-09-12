@@ -54,15 +54,32 @@
 
 
 
-    // TODO: Implement required methods
+    /**
+     * @constructor DummyNotification
+     */
     function DummyNotification() {}
+
+    Object.defineProperty(DummyNotification, 'permission', {
+        enumerable: true,
+        get: function() {
+            return PERMISSION_NOTSUPPORTED;
+        }
+    });
+
+    Object.defineProperty(DummyNotification, 'requestPermission', {
+        enumerable: true,
+        writable: true,
+        value: function(callback) {
+            callback(this.permission);
+        }
+    });
 
 
 
 
 
     /**
-     * @constructor IE Notification
+     * @constructor IENotification
      */
     function IENotification(title, options) {
         var notificationIndex = IENotificationIndex;
@@ -114,7 +131,7 @@
         value: function(callback) {
             return new Promise(function(resolve, reject) {
                 if (this.permission === PERMISSION_DENIED) {
-                alert(this.PERMISSION_REQUEST_MESSAGE);
+                    alert(this.PERMISSION_REQUEST_MESSAGE);
                 }
 
                 resolve(this.permission);
@@ -132,7 +149,7 @@
 
 
     /**
-     * @constructor WebKit Notification
+     * @constructor WebKitNotification
      */
     function WebKitNotification() {}
 
@@ -160,24 +177,14 @@
 
 
     /*
-        Safari6 do not support Notification.permission.
+        [Safari] Safari6 do not support Notification.permission.
         Instead, it support Notification.permissionLevel()
      */
     if (!_Notification.permission) {
         Object.defineProperty(_Notification, 'permission', {
             enumerable: true,
             get: function() {
-                return (_Notification.permissionLevel && _Notification.permissionLevel()) || PERMISSION_NOTSUPPORTED;
-            }
-        });
-    }
-
-    if (!_Notification.requestPermission) {
-        Object.defineProperty(_Notification, 'requestPermission', {
-            enumerable: true,
-            writable: true,
-            value: function(callback) {
-                callback(this.permission);
+                return _Notification.permissionLevel && _Notification.permissionLevel();
             }
         });
     }
