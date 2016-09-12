@@ -31,6 +31,6 @@ this code implements an additional permission level:
 - <strong>notsupported</strong> - Notification API is not supported in any format(WHATWG spec or prefixed). Notification could not be displayed. Any Notification API code execution will pass, but no notification will be displayed.
 
 # TODO
-- Promise is not supported for IE9/10. It should be included by the user.
+- [IE] Add support for event listeners
 - [IE] Implement actions as a thumbBar buttons
 - Add Support for Service Workers
