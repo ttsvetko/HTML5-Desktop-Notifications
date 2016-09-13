@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Tsvetan Tsvetkov
+ * Copyright 2016 Tsvetan Tsvetkov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,18 @@
  *
  * Author: Tsvetan Tsvetkov (tsekach@gmail.com)
  */
-var connect = require('connect');
-connect.createServer(
-    connect.static(__dirname)
-).listen(8080);
+var finalhandler = require('finalhandler');
+var http = require('http');
+var serveStatic = require('serve-static');
+
+// Serve up public/ftp folder
+var serve = serveStatic('.', {'index': ['demo/index.html']});
+
+// Create server
+var server = http.createServer(function(req, res){
+    var done = finalhandler(req, res);
+    serve(req, res, done);
+});
+
+// Listen
+server.listen(8765);

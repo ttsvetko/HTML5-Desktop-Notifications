@@ -1,8 +1,9 @@
-.idea/.name
-.idea/HTML5-Desktop-Notifications.iml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/scopes/scope_settings.xml
-.idea/vcs.xml
-.idea/workspace.xml
+## IntelliJ ##
+.idea/
+
+## node.js modules ##
+node_modules/
+npm-debug.log
+
+## grunt directory ##
+.grunt

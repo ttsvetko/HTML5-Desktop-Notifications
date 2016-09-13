@@ -1,0 +1,30 @@
+{
+    "name": "HTML5Notification",
+    "libraryName": "HTML5 Notification",
+    "description": "Notification polyfill",
+    "version": "0.2.0",
+    "homepage": "https://github.com/ttsvetko/HTML5-Desktop-Notifications",
+    "bugs": {
+        "url": "https://github.com/ttsvetko/HTML5-Desktop-Notifications/issues",
+        "email": "tsekach+html5notification@gmail.com"
+    },
+    "author": {
+        "name": "Tsvetan Tsvetkov",
+        "email": "tsekach@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ttsvetko/HTML5-Desktop-Notifications.git"
+    },
+    "engines": {
+        "node": ">=5"
+    },
+    "devDependencies": {
+        "bower": "latest"
+    },
+    "dependencies": {},
+    "scripts": {
+        "bower": "bower"
+    },
+    "private": true
+}
