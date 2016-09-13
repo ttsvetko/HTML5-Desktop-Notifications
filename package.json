@@ -22,7 +22,10 @@
     "devDependencies": {
         "bower": "latest"
     },
-    "dependencies": {},
+    "dependencies": {
+        "finalhandler": "latest",
+        "serve-static": "latest"
+    },
     "scripts": {
         "bower": "bower"
     },

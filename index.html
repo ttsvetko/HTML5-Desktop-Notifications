@@ -1,28 +1,19 @@
 <!DOCTYPE html>
-<html data-ng-app>
+<html ng-app="h5dn">
 <head>
-    <title>(HTML5) Desktop Notifications</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <title>HTML5 Desktop Notifications</title>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
 </head>
-<body data-ng-controller="NotifyDemo">
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <a class="brand" href="#">(HTML5) Desktop Notifications Demo Page</a>
-        </div>
-    </div>
-    
-    <div class="{{status}}" data-ng-hide="permissionsGranted" data-ng-bind-html-unsafe="message" data-ng-click="requestPermission()"></div>
-    
-    <form name="notificationForm"">
-        <input type="text" data-ng-model="notification.title" data-ng-required="true" data-ng-disabled="!permissionsGranted" placeholder="Notification Title" />
-        <input type="text" data-ng-model="notification.body" data-ng-disabled="!permissionsGranted" placeholder="Notification body" />
-        <input type="text" data-ng-model="notification.icon" data-ng-disabled="true" placeholder="Icon" />
-        <button class="btn btn-primary" data-ng-disabled="!notification.title || !permissionsGranted" data-ng-click="showNotification()">Display Notification</button>
-    </form>
+<body ng-cloak>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-    <script src="js/desktop-notify.js"></script>
-    <script src="js/main.js"></script>
+
+    <!-- Angular Material requires Angular.js Libraries -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+    <!-- Angular Material Library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 </body>
 </html>
