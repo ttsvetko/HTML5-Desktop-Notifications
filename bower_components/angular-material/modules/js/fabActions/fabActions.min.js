@@ -1,0 +1,7 @@
+/*!
+ * Angular Material Design
+ * https://github.com/angular/material
+ * @license MIT
+ * v1.1.0-master-2b98560
+ */
+!function(i,t,e){"use strict";!function(){function i(i){return{restrict:"E",require:["^?mdFabSpeedDial","^?mdFabToolbar"],compile:function(t,e){var a=t.children(),n=i.prefixer().hasAttribute(a,"ng-repeat");n?a.addClass("md-fab-action-item"):a.wrap('<div class="md-fab-action-item">')}}}i.$inject=["$mdUtil"],t.module("material.components.fabActions",["material.core"]).directive("mdFabActions",i)}()}(window,window.angular);

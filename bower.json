@@ -1,5 +1,5 @@
 {
-    "name": "HTML5-Notification-Page",
+    "name": "html5-notification-page",
     "version": "2.0.0",
     "homepage": "https://github.com/ttsvetko/HTML5-Desktop-Notifications.git",
     "authors": [
@@ -9,6 +9,7 @@
     "main": "",
 
     "devDependencies": {
+        "angular-material": "",
         "calvinmetcalf/lie": ""
     },
 

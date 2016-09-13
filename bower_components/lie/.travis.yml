@@ -1,0 +1,22 @@
+language: node_js
+
+script: npm run $COMMAND
+
+matrix:
+  include:
+    - env: COMMAND=node
+      node_js: '0.12'
+    - env: COMMAND=node
+      node_js: 'node'
+    - env: COMMAND=node
+      node_js: 4
+    - env: COMMAND=node
+      node_js: 5
+    - env: COMMAND=node
+      node_js: 6
+    - env: COMMAND=browser
+      node_js: 'node'
+    - env: COMMAND=cover
+      node_js: 'node'
+    - env: COMMAND=jshint
+      node_js: 'node'
