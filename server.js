@@ -20,7 +20,7 @@ var http = require('http');
 var serveStatic = require('serve-static');
 
 // Serve up public/ftp folder
-var serve = serveStatic('.', {'index': ['demo/index.html']});
+var serve = serveStatic('.', {'index': ['index.html']});
 
 // Create server
 var server = http.createServer(function(req, res){

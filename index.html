@@ -4,8 +4,26 @@
     <title>HTML5 Desktop Notifications</title>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
 </head>
-<body ng-cloak>
+<body ng-cloak layout="column" layout-fill>
+    <md-toolbar md-scroll-shrink>
+        <div class="md-toolbar-tools">
+            <h3>
+                HTML5 Desktop Notifications
+            </h3>
+        </div>
+    </md-toolbar>
 
+    <md-content layout-padding>
+        <md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" class="md-primary">
+            <md-nav-item md-nav-click="goto('page1')" name="page1">Page One</md-nav-item>
+            <md-nav-item md-nav-click="goto('page2')" name="page2">Page Two</md-nav-item>
+            <md-nav-item md-nav-click="goto('page3')" name="page3">Page Three</md-nav-item>
+            <!-- these require actual routing with ui-router or ng-route, so they won't work in the demo
+            <md-nav-item md-nav-sref="app.page4" name="page4">Page Four</md-nav-item>
+            <md-nav-item md-nav-href="#page5" name="page5">Page Five</md-nav-item>
+            -->
+        </md-nav-bar>
+    </md-content>
 
     <!-- Angular Material requires Angular.js Libraries -->
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
@@ -15,5 +33,7 @@
 
     <!-- Angular Material Library -->
     <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+    <script src="js/app.js"></script>
 </body>
 </html>
