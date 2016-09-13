@@ -10,18 +10,19 @@
             <h3>
                 HTML5 Desktop Notifications
             </h3>
+            <!-- fill up the space between left and right area -->
+            <span flex></span>
+
+            <md-button class="md-accent md-raised" href="https://github.com/ttsvetko/HTML5-Desktop-Notifications">
+                View Source
+            </md-button>
         </div>
     </md-toolbar>
 
     <md-content layout-padding>
-        <md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" class="md-primary">
-            <md-nav-item md-nav-click="goto('page1')" name="page1">Page One</md-nav-item>
-            <md-nav-item md-nav-click="goto('page2')" name="page2">Page Two</md-nav-item>
-            <md-nav-item md-nav-click="goto('page3')" name="page3">Page Three</md-nav-item>
-            <!-- these require actual routing with ui-router or ng-route, so they won't work in the demo
-            <md-nav-item md-nav-sref="app.page4" name="page4">Page Four</md-nav-item>
-            <md-nav-item md-nav-href="#page5" name="page5">Page Five</md-nav-item>
-            -->
+        <md-nav-bar md-selected-nav-item="doc" nav-bar-aria-label="navigation links">
+            <md-nav-item md-nav-href="#doc" name="doc">Documentation</md-nav-item>
+            <md-nav-item md-nav-href="#demo" name="demo">Demo</md-nav-item>
         </md-nav-bar>
     </md-content>
 
