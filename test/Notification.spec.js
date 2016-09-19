@@ -33,9 +33,6 @@ describe("Notification", function() {
         // Test notification with params which is not an object
         expect(function() {return new Notification('', '')}).toThrowError();
 
-        // Test valid Notification
-        expect((new Notification('')) instanceof Notification).toBe(true);
-
         // If title is null/undefined - it should be displayed as null/undefined
         expect((new Notification(null)).title).toBe('null');
         expect((new Notification(undefined)).title).toBe('undefined');
@@ -46,12 +43,6 @@ describe("Notification", function() {
         expect(function() {return new Notification('', {'dir': 'a'})}).toThrowError();
         expect(function() {return new Notification('', {'dir': 'undefined'})}).toThrowError();
         expect(function() {return new Notification('', {'dir': null})}).toThrowError();
-
-
-        // Test valid dir params: undefined/ltr/rtl
-        expect((new Notification('', {'dir': undefined})) instanceof Notification).toBe(true);
-        expect((new Notification('', {'dir': 'ltr'})) instanceof Notification).toBe(true);
-        expect((new Notification('', {'dir': 'rtl'})) instanceof Notification).toBe(true);
     });
 
 
