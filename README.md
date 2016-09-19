@@ -12,7 +12,6 @@
 # Notes
 - [IE 9][IE 10] Does not support Promise. Polyfill required.
 - [MS Edge] Notifications supported for the latest version of Edge that comes with Windows 10 Anniversary Update
-- [Safari] Do not display Notification if title is not set
 - [Safari] Icon is not displayed - it uses the application icon instance of provided one
 - Have to type of icons - one image format that will be displayed for Chrome/Safari/Firefox and one in .ico format, 16x16 for IE
     The library automatically will parse the icon name and will add .ico extension if it is not .ico
