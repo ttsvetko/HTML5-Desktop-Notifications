@@ -30,6 +30,6 @@ this code implements an additional permission level:
 - <strong>notsupported</strong> - Notification API is not supported in any format(WHATWG spec or prefixed). Notification could not be displayed. Any Notification API code execution will pass, but no notification will be displayed.
 
 # TODO
-- [IE] Add support for event listeners
-- [IE] Implement actions as a thumbBar buttons
-- Add Support for Service Workers
+- [] [IE] Add support for event listeners
+- [] [IE] Implement actions as a thumbBar buttons
+- [] Add Support for Service Workers
