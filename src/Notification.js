@@ -63,16 +63,27 @@ limitations under the License.
     function DummyNotification() {
         var dummyElement = document.createElement('div');
 
-        this.addEventListener = function() {
-            dummyElement.addEventListener.apply(dummyElement, arguments);
+        this.addEventListener = function(eventName, callback) {
+            dummyElement.addEventListener(eventName, callback.bind(this));
         };
 
-        this.removeEventListener = function() {
-            dummyElement.removeEventListener.apply(dummyElement, arguments);
+        this.removeEventListener = function(eventName, callback) {
+            dummyElement.removeEventListener(eventName, callback.bind(this));
         };
 
-        this.dispatchEvent = function() {
-            dummyElement.dispatchEvent.apply(dummyElement, arguments);
+        this.dispatchEvent = function(eventName) {
+            if (typeof eventName !== 'string') {
+                return;
+            }
+
+            try {
+                dummyElement.dispatchEvent(new Event(eventName));
+            } catch (e) {
+                var event = document.createEvent('Event');
+                event.initEvent(eventName, false, true);
+                dummyElement.dispatchEvent(event);
+            }
+
         };
     }
     Object.defineProperty(DummyNotification, "permission", {
@@ -102,12 +113,13 @@ limitations under the License.
                         window.external.msSiteModeClearIconOverlay();
                         // Remove close events
                         IECloseNotificationEvents.forEach(function(event) {
-                            window.removeEventListener(event, this.close.bind(this));
+                            window.removeEventListener(event, this.close);
                         }.bind(this));
                         this.dispatchEvent("click");
                         this.dispatchEvent("close");
+                        notificationIndex = null;
                     }
-                }
+                }.bind(this)
             }
         });
         // Clear any previous icon overlay
@@ -118,10 +130,10 @@ limitations under the License.
         }
         // Blink icon
         window.external.msSiteModeActivate();
-        this.dispatchEvent(new Event('show'));
+        this.dispatchEvent('show');
         // Attach close event to window
         IECloseNotificationEvents.forEach(function(event) {
-            window.addEventListener(event, this.close.bind(this));
+            window.addEventListener(event, this.close);
         }.bind(this));
         notificationIndex = ++IENotificationIndex;
     }
