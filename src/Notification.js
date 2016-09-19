@@ -35,6 +35,7 @@ limitations under the License.
     // map for the old permission values
     var PERMISSIONS = [ PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED, PERMISSION_NOTSUPPORTED ];
     var DIRESCTIONS = [ "auto", "ltr", "rtl" ];
+
     /*
         IE does not support Notifications in the same meaning as other modern browsers.
         On the other side, IE9+(except MS Edge) implement flashing pinned site taskbar buttons.
@@ -59,7 +60,21 @@ limitations under the License.
     /**
      * @constructor DummyNotification
      */
-    function DummyNotification() {}
+    function DummyNotification() {
+        var dummyElement = document.createElement('div');
+
+        this.addEventListener = function() {
+            dummyElement.addEventListener.apply(dummyElement, arguments);
+        };
+
+        this.removeEventListener = function() {
+            dummyElement.removeEventListener.apply(dummyElement, arguments);
+        };
+
+        this.dispatchEvent = function() {
+            dummyElement.dispatchEvent.apply(dummyElement, arguments);
+        };
+    }
     Object.defineProperty(DummyNotification, "permission", {
         enumerable: true,
         get: function() {
@@ -77,6 +92,8 @@ limitations under the License.
      * @constructor IENotification
      */
     function IENotification(title, options) {
+        DummyNotification.call(this);
+
         var notificationIndex = IENotificationIndex;
         Object.defineProperties(this, {
             close: {
@@ -101,6 +118,7 @@ limitations under the License.
         }
         // Blink icon
         window.external.msSiteModeActivate();
+        this.dispatchEvent(new Event('show'));
         // Attach close event to window
         IECloseNotificationEvents.forEach(function(event) {
             window.addEventListener(event, this.close.bind(this));
@@ -130,12 +148,11 @@ limitations under the License.
         writable: true,
         value: "IE supports notifications in pinned mode only. Pin this page on your taskbar to receive notifications."
     });
-    // TODO: Implement EventTarget
-    // try {
-    //     IENotification.prototype = EventTarget.prototype;
-    // } catch (e) {
-    //     // Safari does not expose the EventTarget object
-    // }
+
+
+
+
+
     /**
      * @constructor WebKitNotification
      */
@@ -225,20 +242,6 @@ limitations under the License.
             });
         }
         /* TODO: noscreen property */
-        // TODO: [SPEC] EventHandler onclick
-        if (!notification.onclick) {
-            Object.defineProperty(notification, "onclick", {
-                value: null,
-                writable: true
-            });
-        }
-        // TODO: [SPEC] EventHandler onerror
-        if (!notification.onerror) {
-            Object.defineProperty(notification, "onerror", {
-                value: null,
-                writable: true
-            });
-        }
         /* TODO: renotify property */
         if (!notification.requireInteraction) {
             Object.defineProperty(notification, "requireInteraction", {
