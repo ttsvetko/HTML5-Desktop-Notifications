@@ -1,5 +1,5 @@
 {
-  "name": "HTML5Notification",
+  "name": "html5-notification",
   "libraryName": "HTML5 Notification",
   "description": "Notification polyfill",
   "version": "3.0.0",
@@ -50,5 +50,5 @@
     "karma": "karma start",
     "test": "karma start --browsers Firefox --single-run"
   },
-  "private": true
+  "private": false
 }
