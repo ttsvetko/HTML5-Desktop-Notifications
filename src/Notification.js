@@ -1,4 +1,4 @@
-/*! HTML5 Notification - v0.2.0 - 2016-09-13
+/*! HTML5 Notification - v0.3.0
 
 Copyright 2016 Tsvetan Tsvetkov
 
@@ -13,28 +13,30 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
 */
 
 /** @namespace window */
 /** @namespace window.webkitNotifications */
 /** @namespace window.external */
-(function() {
+
+;(function() {
     /*
      Safari native methods required for Notifications do NOT run in strict mode.
      */
-    //"use strict";
+    //'use strict';
     // local variables
-    var PERMISSION_DEFAULT = "default";
+    var PERMISSION_DEFAULT = 'default';
     // The user decision is unknown; in this case the application will act as if permission was denied.
-    var PERMISSION_GRANTED = "granted";
+    var PERMISSION_GRANTED = 'granted';
     // The user has explicitly granted permission for the current origin to display system notifications.
-    var PERMISSION_DENIED = "denied";
+    var PERMISSION_DENIED = 'denied';
     // The user has explicitly denied permission for the current origin to display system notifications.
-    var PERMISSION_NOTSUPPORTED = "notsupported";
+    var PERMISSION_NOTSUPPORTED = 'notsupported';
     // The Notification API is not supported on current environment
     // map for the old permission values
     var PERMISSIONS = [ PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED, PERMISSION_NOTSUPPORTED ];
-    var DIRESCTIONS = [ "auto", "ltr", "rtl" ];
+    var DIRESCTIONS = [ 'auto', 'ltr', 'rtl' ];
 
     /*
         IE does not support Notifications in the same meaning as other modern browsers.
@@ -43,20 +45,26 @@ limitations under the License.
         So, we need to keep track of the notification that calls close method.
      */
     var IENotificationIndex = -1;
-    var IECloseNotificationEvents = [ "click", "scroll", "focus" ];
+    var IECloseNotificationEvents = [ 'click', 'scroll', 'focus' ];
     var getIco = function(icon) {
-        var lastIndex = icon.lastIndexOf(".");
-        return (lastIndex !== -1 ? icon.substr(0, lastIndex) : icon) + ".ico";
+        var lastIndex = icon.lastIndexOf('.');
+        return (lastIndex !== -1 ? icon.substr(0, lastIndex) : icon) + '.ico';
     };
+
     /*
      * Internal Notificaiton constructor. Keeps the original Notification
      * constructor if any or use empty function constructor for browsers
      * that do not support Notifications
      */
-    var _Notification = window.Notification || // Opera Mobile/Android Browser
-    window.webkitNotifications && WebKitNotification || // IE9+ pinned site
-    "external" in window && "msIsSiteMode" in window.external && window.external.msIsSiteMode() !== undefined && IENotification || // Notifications Not supported. Return dummy constructor
-    DummyNotification;
+    var _Notification = window.Notification || /* Opera Mobile/Android Browser */
+    window.webkitNotifications && WebKitNotification || /* IE9+ pinned site */
+    'external' in window && 'msIsSiteMode' in window.external && window.external.msIsSiteMode() !== undefined && IENotification || /* Notifications Not supported. Return dummy constructor */
+    DummyNotification /* Not Supported Browsers */;
+
+
+
+
+
     /**
      * @constructor DummyNotification
      */
@@ -86,19 +94,26 @@ limitations under the License.
 
         };
     }
-    Object.defineProperty(DummyNotification, "permission", {
+
+    Object.defineProperty(DummyNotification, 'permission', {
         enumerable: true,
         get: function() {
             return PERMISSION_NOTSUPPORTED;
         }
     });
-    Object.defineProperty(DummyNotification, "requestPermission", {
+
+    Object.defineProperty(DummyNotification, 'requestPermission', {
         enumerable: true,
         writable: true,
         value: function(callback) {
             callback(this.permission);
         }
     });
+
+
+
+
+
     /**
      * @constructor IENotification
      */
@@ -106,6 +121,7 @@ limitations under the License.
         DummyNotification.call(this);
 
         var notificationIndex = IENotificationIndex;
+
         Object.defineProperties(this, {
             close: {
                 value: function(event) {
@@ -115,36 +131,46 @@ limitations under the License.
                         IECloseNotificationEvents.forEach(function(event) {
                             window.removeEventListener(event, this.close);
                         }.bind(this));
-                        this.dispatchEvent("click");
-                        this.dispatchEvent("close");
+                        this.dispatchEvent('click');
+                        this.dispatchEvent('close');
                         notificationIndex = null;
                     }
                 }.bind(this)
             }
         });
+
         // Clear any previous icon overlay
         this.close();
+
         // Set icon
         if (this.icon) {
             window.external.msSiteModeSetIconOverlay(getIco(this.icon), this.description || this.title);
         }
+
         // Blink icon
         window.external.msSiteModeActivate();
+
+        // Trigger show event
         this.dispatchEvent('show');
+
         // Attach close event to window
         IECloseNotificationEvents.forEach(function(event) {
             window.addEventListener(event, this.close);
         }.bind(this));
+
+        // Increment notification index
         notificationIndex = ++IENotificationIndex;
     }
-    Object.defineProperty(IENotification, "permission", {
+
+    Object.defineProperty(IENotification, 'permission', {
         enumerable: true,
         get: function() {
             var isTabPinned = window.external.msIsSiteMode();
             return isTabPinned ? PERMISSION_GRANTED : PERMISSION_DENIED;
         }
     });
-    Object.defineProperty(IENotification, "requestPermission", {
+
+    Object.defineProperty(IENotification, 'requestPermission', {
         enumerable: true,
         writable: true,
         value: function(callback) {
@@ -156,9 +182,10 @@ limitations under the License.
             }.bind(this));
         }
     });
-    Object.defineProperty(IENotification, "PERMISSION_REQUEST_MESSAGE", {
+
+    Object.defineProperty(IENotification, 'PERMISSION_REQUEST_MESSAGE', {
         writable: true,
-        value: "IE supports notifications in pinned mode only. Pin this page on your taskbar to receive notifications."
+        value: 'IE supports notifications in pinned mode only. Pin this page on your taskbar to receive notifications.'
     });
 
 
@@ -169,13 +196,15 @@ limitations under the License.
      * @constructor WebKitNotification
      */
     function WebKitNotification() {}
-    Object.defineProperty(WebKitNotification, "permission", {
+
+    Object.defineProperty(WebKitNotification, 'permission', {
         enumerable: true,
         get: function() {
             return PERMISSIONS[window.webkitNotifications.checkPermission()];
         }
     });
-    Object.defineProperty(WebKitNotification, "requestPermission", {
+
+    Object.defineProperty(WebKitNotification, 'requestPermission', {
         enumerable: true,
         writable: true,
         value: function(callback) {
@@ -186,27 +215,39 @@ limitations under the License.
             });
         }
     });
+
+
+
+
+
     /*
         [Safari] Safari6 do not support Notification.permission.
         Instead, it support Notification.permissionLevel()
      */
     if (!_Notification.permission) {
-        Object.defineProperty(_Notification, "permission", {
+        Object.defineProperty(_Notification, 'permission', {
             enumerable: true,
             get: function() {
                 return _Notification.permissionLevel && _Notification.permissionLevel();
             }
         });
     }
+
+
+
+
+
     /**
      * @constructor Notification
      */
     function Notification(title, options) {
         var dir;
         var notification;
+
         if (!arguments.length) {
-            throw TypeError("Failed to construct 'Notification': 1 argument required, but only 0 present.");
+            throw TypeError('Failed to construct "Notification": 1 argument required, but only 0 present.');
         }
+
         /*
             Chrome display notifications when title is empty screen, but
             Safari do NOT.
@@ -214,77 +255,97 @@ limitations under the License.
             Set title to non-display characted in order to display notifications
             in Safari as well when title is empty.
          */
-        if (title === "") {
-            title = "\b";
+        if (title === '') {
+            title = '\b';
         }
-        if (arguments.length > 1 && "object" !== typeof options) {
-            throw TypeError("Failed to construct 'Notification': parameter 2 ('options') is not an object.");
+
+        if (arguments.length > 1 && 'object' !== typeof options) {
+            throw TypeError('Failed to construct "Notification": parameter 2 ("options") is not an object.');
         }
+
         dir = Object(options).dir;
         if (dir !== undefined && DIRESCTIONS.indexOf(dir) === -1) {
-            throw TypeError("Failed to construct 'Notification': The provided value '" + dir + "' is not a valid enum value of type NotificationDirection.");
+            throw TypeError('Failed to construct "Notification": The provided value "' + dir + '" is not a valid enum value of type NotificationDirection.');
         }
+
         options = Object(options);
         notification = new _Notification(title, options);
+
         /* TODO: actions property */
+
         /* TODO: badge property */
+
         if (!notification.body) {
-            Object.defineProperty(notification, "body", {
-                value: String(options.body || "")
+            Object.defineProperty(notification, 'body', {
+                value: String(options.body || '')
             });
         }
+
         if (!notification.data) {
-            Object.defineProperty(notification, "data", {
+            Object.defineProperty(notification, 'data', {
                 value: options.data || null
             });
         }
+
         if (!notification.dir) {
-            Object.defineProperty(notification, "dir", {
+            Object.defineProperty(notification, 'dir', {
                 value: dir || DIRESCTIONS[0]
             });
         }
+
         if (!notification.icon) {
-            Object.defineProperty(notification, "icon", {
-                value: String(options.icon || "")
+            Object.defineProperty(notification, 'icon', {
+                value: String(options.icon || '')
             });
         }
+
         if (!notification.lang) {
-            Object.defineProperty(notification, "lang", {
-                value: String(options.lang || "")
+            Object.defineProperty(notification, 'lang', {
+                value: String(options.lang || '')
             });
         }
+
         /* TODO: noscreen property */
+
         /* TODO: renotify property */
+
         if (!notification.requireInteraction) {
-            Object.defineProperty(notification, "requireInteraction", {
+            Object.defineProperty(notification, 'requireInteraction', {
                 value: Boolean(options.requireInteraction)
             });
         }
+
         /* TODO: sound property */
+
         if (!notification.silent) {
-            Object.defineProperty(notification, "silent", {
+            Object.defineProperty(notification, 'silent', {
                 value: Boolean(options.silent)
             });
         }
+
         if (!notification.tag) {
-            Object.defineProperty(notification, "tag", {
-                value: String(options.tag || "")
+            Object.defineProperty(notification, 'tag', {
+                value: String(options.tag || '')
             });
         }
+
         if (!notification.title) {
-            Object.defineProperty(notification, "title", {
+            Object.defineProperty(notification, 'title', {
                 value: String(title)
             });
         }
+
         if (!notification.timestamp) {
-            Object.defineProperty(notification, "timestamp", {
+            Object.defineProperty(notification, 'timestamp', {
                 value: new Date().getTime()
             });
         }
+
         /* TODO: vibrate property */
+
         return notification;
     }
-    Object.defineProperty(Notification, "permission", {
+    Object.defineProperty(Notification, 'permission', {
         enumerable: true,
         get: function() {
             return _Notification.permission;
@@ -302,7 +363,7 @@ limitations under the License.
         Old Spec:
         Notification.requestPermission(callback);
      */
-    Object.defineProperty(Notification, "requestPermission", {
+    Object.defineProperty(Notification, 'requestPermission', {
         enumerable: true,
         value: function() {
             return new Promise(function(resolve, reject) {
@@ -316,5 +377,10 @@ limitations under the License.
             });
         }
     });
+
+
+
+
+
     window.Notification = Notification;
 })();
