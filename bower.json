@@ -9,8 +9,7 @@
     "main": "",
 
     "devDependencies": {
-        "calvinmetcalf/lie": "",
-        "html5-desktop-notifications": "^3.0.0"
+        "calvinmetcalf/lie": ""
     },
 
     "keywords": [
