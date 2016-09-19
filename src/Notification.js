@@ -1,3 +1,21 @@
+/*! HTML5 Notification - v0.3.0
+
+Copyright 2016 Tsvetan Tsvetkov
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
+
 /** @namespace window */
 /** @namespace window.webkitNotifications */
 /** @namespace window.external */
@@ -6,17 +24,19 @@
     /*
      Safari native methods required for Notifications do NOT run in strict mode.
      */
-    //"use strict";
-
+    //'use strict';
     // local variables
-    var PERMISSION_DEFAULT      = 'default'; // The user decision is unknown; in this case the application will act as if permission was denied.
-    var PERMISSION_GRANTED      = 'granted'; // The user has explicitly granted permission for the current origin to display system notifications.
-    var PERMISSION_DENIED       = 'denied'; // The user has explicitly denied permission for the current origin to display system notifications.
-    var PERMISSION_NOTSUPPORTED = 'notsupported'; // The Notification API is not supported on current environment
+    var PERMISSION_DEFAULT = 'default';
+    // The user decision is unknown; in this case the application will act as if permission was denied.
+    var PERMISSION_GRANTED = 'granted';
+    // The user has explicitly granted permission for the current origin to display system notifications.
+    var PERMISSION_DENIED = 'denied';
+    // The user has explicitly denied permission for the current origin to display system notifications.
+    var PERMISSION_NOTSUPPORTED = 'notsupported';
+    // The Notification API is not supported on current environment
     // map for the old permission values
-    var PERMISSIONS = [PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED, PERMISSION_NOTSUPPORTED];
-
-    var DIRESCTIONS = ['auto', 'ltr', 'rtl'];
+    var PERMISSIONS = [ PERMISSION_GRANTED, PERMISSION_DEFAULT, PERMISSION_DENIED, PERMISSION_NOTSUPPORTED ];
+    var DIRESCTIONS = [ 'auto', 'ltr', 'rtl' ];
 
     /*
         IE does not support Notifications in the same meaning as other modern browsers.
@@ -25,28 +45,21 @@
         So, we need to keep track of the notification that calls close method.
      */
     var IENotificationIndex = -1;
-    var IECloseNotificationEvents = ['click', 'scroll', 'focus'];
+    var IECloseNotificationEvents = [ 'click', 'scroll', 'focus' ];
     var getIco = function(icon) {
         var lastIndex = icon.lastIndexOf('.');
         return (lastIndex !== -1 ? icon.substr(0, lastIndex) : icon) + '.ico';
     };
-
-
 
     /*
      * Internal Notificaiton constructor. Keeps the original Notification
      * constructor if any or use empty function constructor for browsers
      * that do not support Notifications
      */
-    var _Notification = (
-        window.Notification ||
-        // Opera Mobile/Android Browser
-        (window.webkitNotifications && WebKitNotification) ||
-        // IE9+ pinned site
-        (("external" in window) && ("msIsSiteMode" in window.external) && window.external.msIsSiteMode() !== undefined && IENotification) ||
-        // Notifications Not supported. Return dummy constructor
-        DummyNotification
-    );
+    var _Notification = window.Notification || /* Opera Mobile/Android Browser */
+    window.webkitNotifications && WebKitNotification || /* IE9+ pinned site */
+    'external' in window && 'msIsSiteMode' in window.external && window.external.msIsSiteMode() !== undefined && IENotification || /* Notifications Not supported. Return dummy constructor */
+    DummyNotification /* Not Supported Browsers */;
 
 
 
@@ -55,7 +68,32 @@
     /**
      * @constructor DummyNotification
      */
-    function DummyNotification() {}
+    function DummyNotification() {
+        var dummyElement = document.createElement('div');
+
+        this.addEventListener = function(eventName, callback) {
+            dummyElement.addEventListener(eventName, callback.bind(this));
+        };
+
+        this.removeEventListener = function(eventName, callback) {
+            dummyElement.removeEventListener(eventName, callback.bind(this));
+        };
+
+        this.dispatchEvent = function(eventName) {
+            if (typeof eventName !== 'string') {
+                return;
+            }
+
+            try {
+                dummyElement.dispatchEvent(new Event(eventName));
+            } catch (e) {
+                var event = document.createEvent('Event');
+                event.initEvent(eventName, false, true);
+                dummyElement.dispatchEvent(event);
+            }
+
+        };
+    }
 
     Object.defineProperty(DummyNotification, 'permission', {
         enumerable: true,
@@ -80,23 +118,24 @@
      * @constructor IENotification
      */
     function IENotification(title, options) {
-        var notificationIndex;
+        DummyNotification.call(this);
+
+        var notificationIndex = IENotificationIndex;
 
         Object.defineProperties(this, {
             close: {
                 value: function(event) {
                     if (notificationIndex === IENotificationIndex) {
                         window.external.msSiteModeClearIconOverlay();
-
                         // Remove close events
                         IECloseNotificationEvents.forEach(function(event) {
-                            window.removeEventListener(event, this.close.bind(this));
+                            window.removeEventListener(event, this.close);
                         }.bind(this));
-
                         this.dispatchEvent('click');
                         this.dispatchEvent('close');
+                        notificationIndex = null;
                     }
-                }
+                }.bind(this)
             }
         });
 
@@ -111,13 +150,18 @@
         // Blink icon
         window.external.msSiteModeActivate();
 
+        // Trigger show event
+        this.dispatchEvent('show');
+
         // Attach close event to window
         IECloseNotificationEvents.forEach(function(event) {
-            window.addEventListener(event, this.close.bind(this));
+            window.addEventListener(event, this.close);
         }.bind(this));
 
+        // Increment notification index
         notificationIndex = ++IENotificationIndex;
     }
+
     Object.defineProperty(IENotification, 'permission', {
         enumerable: true,
         get: function() {
@@ -134,7 +178,6 @@
                 if (this.permission === PERMISSION_DENIED) {
                     alert(this.PERMISSION_REQUEST_MESSAGE);
                 }
-
                 resolve(this.permission);
             }.bind(this));
         }
@@ -145,11 +188,6 @@
         value: 'IE supports notifications in pinned mode only. Pin this page on your taskbar to receive notifications.'
     });
 
-    try {
-        IENotification.prototype = EventTarget.prototype;
-    } catch (e) {
-        // Safari does not expose the EventTarget object
-    }
 
 
 
@@ -207,7 +245,7 @@
         var notification;
 
         if (!arguments.length) {
-            throw TypeError('Failed to construct \'Notification\': 1 argument required, but only 0 present.');
+            throw TypeError('Failed to construct "Notification": 1 argument required, but only 0 present.');
         }
 
         /*
@@ -222,48 +260,97 @@
         }
 
         if (arguments.length > 1 && 'object' !== typeof options) {
-            throw TypeError('Failed to construct \'Notification\': parameter 2 (\'options\') is not an object.');
+            throw TypeError('Failed to construct "Notification": parameter 2 ("options") is not an object.');
         }
 
         dir = Object(options).dir;
         if (dir !== undefined && DIRESCTIONS.indexOf(dir) === -1) {
-            throw TypeError('Failed to construct \'Notification\': The provided value \'' + dir +'\' is not a valid enum value of type NotificationDirection.');
+            throw TypeError('Failed to construct "Notification": The provided value "' + dir + '" is not a valid enum value of type NotificationDirection.');
         }
 
         options = Object(options);
-
         notification = new _Notification(title, options);
 
-        Object.defineProperties(this, {
-            /* TODO: actions property */
-            /* TODO: badge property */
-            'body': { value: String(options.body || '') },
+        /* TODO: actions property */
 
-            'data': { value: options.data || null },
-            'dir': { value: dir },
-            'icon': { value: String(options.icon || '') },
-            'lang': { value: String(options.lang || '') },
-            /* TODO: noscreen property */
-            'onclick': { value : null, writable: true },
-            'onerror': { value : null, writable: true },
-            /* TODO: renotify property */
-            'requireInteraction': { value: Boolean(options.requireInteraction) },
-            /* TODO: sound property */
-            'silent': { value: Boolean(options.silent) },
-            'tag': { value: String(options.tag || '') },
-            'title': { value: String(title) },
-            'timestamp': { value: (new Date()).getTime() },
-            /* TODO: vibrate property */
-        });
+        /* TODO: badge property */
+
+        if (!notification.body) {
+            Object.defineProperty(notification, 'body', {
+                value: String(options.body || '')
+            });
+        }
+
+        if (!notification.data) {
+            Object.defineProperty(notification, 'data', {
+                value: options.data || null
+            });
+        }
+
+        if (!notification.dir) {
+            Object.defineProperty(notification, 'dir', {
+                value: dir || DIRESCTIONS[0]
+            });
+        }
+
+        if (!notification.icon) {
+            Object.defineProperty(notification, 'icon', {
+                value: String(options.icon || '')
+            });
+        }
+
+        if (!notification.lang) {
+            Object.defineProperty(notification, 'lang', {
+                value: String(options.lang || '')
+            });
+        }
+
+        /* TODO: noscreen property */
+
+        /* TODO: renotify property */
+
+        if (!notification.requireInteraction) {
+            Object.defineProperty(notification, 'requireInteraction', {
+                value: Boolean(options.requireInteraction)
+            });
+        }
+
+        /* TODO: sound property */
+
+        if (!notification.silent) {
+            Object.defineProperty(notification, 'silent', {
+                value: Boolean(options.silent)
+            });
+        }
+
+        if (!notification.tag) {
+            Object.defineProperty(notification, 'tag', {
+                value: String(options.tag || '')
+            });
+        }
+
+        if (!notification.title) {
+            Object.defineProperty(notification, 'title', {
+                value: String(title)
+            });
+        }
+
+        if (!notification.timestamp) {
+            Object.defineProperty(notification, 'timestamp', {
+                value: new Date().getTime()
+            });
+        }
+
+        /* TODO: vibrate property */
+
+        return notification;
     }
-
     Object.defineProperty(Notification, 'permission', {
         enumerable: true,
         get: function() {
             return _Notification.permission;
         }
     });
-
     /*
         Notification.requestPermission should return a Promise(by spec).
         Keep the original method and replace it with a custom one that
@@ -276,24 +363,24 @@
         Old Spec:
         Notification.requestPermission(callback);
      */
-     Object.defineProperty(Notification, 'requestPermission', {
-         enumerable: true,
-         value: function() {
-             return new Promise(function(resolve, reject) {
-                 var promise = _Notification.requestPermission(function(permission) {
-                     resolve(permission);
-                 });
+    Object.defineProperty(Notification, 'requestPermission', {
+        enumerable: true,
+        value: function() {
+            return new Promise(function(resolve, reject) {
+                var promise = _Notification.requestPermission(function(permission) {
+                    resolve(permission);
+                });
+                if (!(promise instanceof Promise)) {
+                    return;
+                }
+                resolve(promise);
+            });
+        }
+    });
 
-                 if (!(promise instanceof Promise)) {
-                     return;
-                 }
 
-                 resolve(promise);
-             });
-         }
-     });
 
 
 
     window.Notification = Notification;
-}());
+})();
