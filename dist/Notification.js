@@ -1,4 +1,4 @@
-/*! HTML5 Notification - v0.2.0 - 2016-09-12
+/*! HTML5 Notification - v3.0.0 - 2016-09-19
 
 Copyright 2016 Tsvetan Tsvetkov
 
@@ -22,7 +22,7 @@ limitations under the License.
     /*
      Safari native methods required for Notifications do NOT run in strict mode.
      */
-    //"use strict";
+    //'use strict';
     // local variables
     var PERMISSION_DEFAULT = "default";
     // The user decision is unknown; in this case the application will act as if permission was denied.
@@ -52,14 +52,34 @@ limitations under the License.
      * constructor if any or use empty function constructor for browsers
      * that do not support Notifications
      */
-    var _Notification = window.Notification || // Opera Mobile/Android Browser
-    window.webkitNotifications && WebKitNotification || // IE9+ pinned site
-    "external" in window && "msIsSiteMode" in window.external && window.external.msIsSiteMode() !== undefined && IENotification || // Notifications Not supported. Return dummy constructor
+    var _Notification = window.Notification || /* Opera Mobile/Android Browser */
+    window.webkitNotifications && WebKitNotification || /* IE9+ pinned site */
+    "external" in window && "msIsSiteMode" in window.external && window.external.msIsSiteMode() !== undefined && IENotification || /* Notifications Not supported. Return dummy constructor */
     DummyNotification;
     /**
      * @constructor DummyNotification
      */
-    function DummyNotification() {}
+    function DummyNotification() {
+        var dummyElement = document.createElement("div");
+        this.addEventListener = function(eventName, callback) {
+            dummyElement.addEventListener(eventName, callback.bind(this));
+        };
+        this.removeEventListener = function(eventName, callback) {
+            dummyElement.removeEventListener(eventName, callback.bind(this));
+        };
+        this.dispatchEvent = function(eventName) {
+            if (typeof eventName !== "string") {
+                return;
+            }
+            try {
+                dummyElement.dispatchEvent(new Event(eventName));
+            } catch (e) {
+                var event = document.createEvent("Event");
+                event.initEvent(eventName, false, true);
+                dummyElement.dispatchEvent(event);
+            }
+        };
+    }
     Object.defineProperty(DummyNotification, "permission", {
         enumerable: true,
         get: function() {
@@ -77,6 +97,7 @@ limitations under the License.
      * @constructor IENotification
      */
     function IENotification(title, options) {
+        DummyNotification.call(this);
         var notificationIndex = IENotificationIndex;
         Object.defineProperties(this, {
             close: {
@@ -85,12 +106,13 @@ limitations under the License.
                         window.external.msSiteModeClearIconOverlay();
                         // Remove close events
                         IECloseNotificationEvents.forEach(function(event) {
-                            window.removeEventListener(event, this.close.bind(this));
+                            window.removeEventListener(event, this.close);
                         }.bind(this));
                         this.dispatchEvent("click");
                         this.dispatchEvent("close");
+                        notificationIndex = null;
                     }
-                }
+                }.bind(this)
             }
         });
         // Clear any previous icon overlay
@@ -101,10 +123,13 @@ limitations under the License.
         }
         // Blink icon
         window.external.msSiteModeActivate();
+        // Trigger show event
+        this.dispatchEvent("show");
         // Attach close event to window
         IECloseNotificationEvents.forEach(function(event) {
-            window.addEventListener(event, this.close.bind(this));
+            window.addEventListener(event, this.close);
         }.bind(this));
+        // Increment notification index
         notificationIndex = ++IENotificationIndex;
     }
     Object.defineProperty(IENotification, "permission", {
@@ -130,9 +155,6 @@ limitations under the License.
         writable: true,
         value: "IE supports notifications in pinned mode only. Pin this page on your taskbar to receive notifications."
     });
-    try {
-        IENotification.prototype = EventTarget.prototype;
-    } catch (e) {}
     /**
      * @constructor WebKitNotification
      */
@@ -173,7 +195,7 @@ limitations under the License.
         var dir;
         var notification;
         if (!arguments.length) {
-            throw TypeError("Failed to construct 'Notification': 1 argument required, but only 0 present.");
+            throw TypeError('Failed to construct "Notification": 1 argument required, but only 0 present.');
         }
         /*
             Chrome display notifications when title is empty screen, but
@@ -186,59 +208,71 @@ limitations under the License.
             title = "\b";
         }
         if (arguments.length > 1 && "object" !== typeof options) {
-            throw TypeError("Failed to construct 'Notification': parameter 2 ('options') is not an object.");
+            throw TypeError('Failed to construct "Notification": parameter 2 ("options") is not an object.');
         }
         dir = Object(options).dir;
         if (dir !== undefined && DIRESCTIONS.indexOf(dir) === -1) {
-            throw TypeError("Failed to construct 'Notification': The provided value '" + dir + "' is not a valid enum value of type NotificationDirection.");
+            throw TypeError('Failed to construct "Notification": The provided value "' + dir + '" is not a valid enum value of type NotificationDirection.');
         }
         options = Object(options);
         notification = new _Notification(title, options);
-        Object.defineProperties(this, {
-            /* TODO: actions property */
-            /* TODO: badge property */
-            body: {
+        /* TODO: actions property */
+        /* TODO: badge property */
+        if (!notification.body) {
+            Object.defineProperty(notification, "body", {
                 value: String(options.body || "")
-            },
-            data: {
+            });
+        }
+        if (!notification.data) {
+            Object.defineProperty(notification, "data", {
                 value: options.data || null
-            },
-            dir: {
-                value: dir
-            },
-            icon: {
+            });
+        }
+        if (!notification.dir) {
+            Object.defineProperty(notification, "dir", {
+                value: dir || DIRESCTIONS[0]
+            });
+        }
+        if (!notification.icon) {
+            Object.defineProperty(notification, "icon", {
                 value: String(options.icon || "")
-            },
-            lang: {
+            });
+        }
+        if (!notification.lang) {
+            Object.defineProperty(notification, "lang", {
                 value: String(options.lang || "")
-            },
-            /* TODO: noscreen property */
-            onclick: {
-                value: null,
-                writable: true
-            },
-            onerror: {
-                value: null,
-                writable: true
-            },
-            /* TODO: renotify property */
-            requireInteraction: {
+            });
+        }
+        /* TODO: noscreen property */
+        /* TODO: renotify property */
+        if (!notification.requireInteraction) {
+            Object.defineProperty(notification, "requireInteraction", {
                 value: Boolean(options.requireInteraction)
-            },
-            /* TODO: sound property */
-            silent: {
+            });
+        }
+        /* TODO: sound property */
+        if (!notification.silent) {
+            Object.defineProperty(notification, "silent", {
                 value: Boolean(options.silent)
-            },
-            tag: {
+            });
+        }
+        if (!notification.tag) {
+            Object.defineProperty(notification, "tag", {
                 value: String(options.tag || "")
-            },
-            title: {
+            });
+        }
+        if (!notification.title) {
+            Object.defineProperty(notification, "title", {
                 value: String(title)
-            },
-            timestamp: {
+            });
+        }
+        if (!notification.timestamp) {
+            Object.defineProperty(notification, "timestamp", {
                 value: new Date().getTime()
-            }
-        });
+            });
+        }
+        /* TODO: vibrate property */
+        return notification;
     }
     Object.defineProperty(Notification, "permission", {
         enumerable: true,
