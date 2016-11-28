@@ -4,6 +4,7 @@
   "description": "Notification polyfill",
   "version": "3.0.0",
   "homepage": "https://github.com/ttsvetko/HTML5-Desktop-Notifications",
+  "main": "dist/Notification.js",
   "bugs": {
     "url": "https://github.com/ttsvetko/HTML5-Desktop-Notifications/issues",
     "email": "tsekach+html5notification@gmail.com"
