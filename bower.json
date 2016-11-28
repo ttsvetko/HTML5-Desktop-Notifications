@@ -6,7 +6,7 @@
         "Tsvetan Tsvetkov <tsekach@gmail.com>"
     ],
     "description": "A small library that unifies the HTML5 Notifications APIs across different browsers including IE9 & IE10.",
-    "main": "",
+    "main": "dist/Notification.js",
 
     "devDependencies": {
         "calvinmetcalf/lie": ""
